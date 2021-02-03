@@ -3,17 +3,16 @@ package com.goodrec.user;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goodrec.exception.BadRequestException;
 import com.goodrec.security.TokenProvider;
+import com.goodrec.user.domain.UserDetailsServiceImpl;
 import com.goodrec.user.domain.UserService;
 import com.goodrec.user.dto.RegisterRequest;
 import com.goodrec.user.dto.UserResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -40,8 +39,7 @@ class UserControllerTest {
     private TokenProvider tokenProvider;
 
     @MockBean
-    @Qualifier("userDetailsServiceImpl")
-    private UserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
 
     @MockBean
     private UserService userService;

@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.goodrec.security.SecurityConstants.HEADER_STRING;
-import static com.goodrec.security.SecurityConstants.TOKEN_PREFIX;
+import static com.goodrec.security.JwtConstants.HEADER_STRING;
+import static com.goodrec.security.JwtConstants.TOKEN_PREFIX;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 

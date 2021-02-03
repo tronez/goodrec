@@ -6,3 +6,10 @@ app:
   auth:
     tokenSecret: bulbazaurus666!@#$%^&*()
     tokenExpirationMsec: 600000
+
+spring:
+  data:
+    mongodb:
+      port: 27017
+      host: localhost
+      database: test

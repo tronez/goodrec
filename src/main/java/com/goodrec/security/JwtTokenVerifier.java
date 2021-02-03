@@ -1,8 +1,7 @@
 package com.goodrec.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
+import com.goodrec.user.domain.UserDetailsServiceImpl;
+import com.goodrec.user.domain.UserPrincipal;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,16 +13,19 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.UUID;
 
-import static com.goodrec.security.SecurityConstants.HEADER_STRING;
-import static com.goodrec.security.SecurityConstants.TOKEN_PREFIX;
+import static com.goodrec.security.JwtConstants.HEADER_STRING;
+import static com.goodrec.security.JwtConstants.TOKEN_PREFIX;
 
 public class JwtTokenVerifier extends OncePerRequestFilter {
 
     private final TokenProvider tokenProvider;
+    private final UserDetailsServiceImpl userDetailsService;
 
-    public JwtTokenVerifier(TokenProvider tokenProvider) {
+    public JwtTokenVerifier(TokenProvider tokenProvider, UserDetailsServiceImpl userDetailsService) {
         this.tokenProvider = tokenProvider;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -36,13 +38,13 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
 
             if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
 
-                Jws<Claims> claims = Jwts.parser().setSigningKey("secured").parseClaimsJws(token);
-
-                String username = claims.getBody().getSubject();
+                UUID uuid = tokenProvider.getUserUUIDFromToken(token);
+                UserPrincipal principal = userDetailsService.loadUserByUUID(uuid);
 
                 Authentication auth = new UsernamePasswordAuthenticationToken(
-                        username,
-                        null
+                        principal.getUsername(),
+                        principal.getPassword(),
+                        principal.getAuthorities()
                 );
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
