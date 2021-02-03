@@ -1,13 +1,11 @@
-package com.goodrec.config;
+package com.goodrec.user.domain;
 
-import com.goodrec.security.UserPrincipal;
-import com.goodrec.user.UserRepository;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
 
@@ -18,7 +16,8 @@ class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserPrincipal loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository
-                .findByUsername(username)
+                .findByEmail(username)
+                .map(UserPrincipal::createFrom)
                 .orElseThrow(() -> new UsernameNotFoundException("User was not found" + username));
     }
 }

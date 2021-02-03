@@ -1,6 +1,7 @@
 package com.goodrec.security;
 
 import com.goodrec.config.ApplicationProperties;
+import com.goodrec.user.domain.UserPrincipal;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -16,7 +17,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Service
-class JwtsTokenProvider implements TokenProvider {
+public class JwtsTokenProvider implements TokenProvider {
 
     private final ApplicationProperties appProperties;
 

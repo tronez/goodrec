@@ -1,16 +1,25 @@
 package com.goodrec.user.dto;
 
-public class LoginRequest {
+import java.util.UUID;
 
+public class UserResponse {
+
+    private UUID uuid;
     private String email;
     private String password;
 
-    public LoginRequest() {
+    public UserResponse() {
+
     }
 
-    public LoginRequest(String email, String password) {
+    public UserResponse(UUID uuid, String email, String password) {
+        this.uuid = uuid;
         this.email = email;
         this.password = password;
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 
     public String getEmail() {
@@ -20,4 +29,5 @@ public class LoginRequest {
     public String getPassword() {
         return password;
     }
+
 }

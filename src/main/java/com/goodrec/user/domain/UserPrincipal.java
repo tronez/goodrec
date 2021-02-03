@@ -1,9 +1,11 @@
-package com.goodrec.security;
+package com.goodrec.user.domain;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
 
 public class UserPrincipal implements UserDetails {
@@ -21,6 +23,15 @@ public class UserPrincipal implements UserDetails {
         this.email = email;
         this.password = password;
         this.authorities = authorities;
+    }
+
+    public static UserPrincipal createFrom(User user) {
+        var authoritiesList = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+
+        return new UserPrincipal(user.getUuid(),
+                user.getEmail(),
+                user.getPassword(),
+                authoritiesList);
     }
 
     @Override

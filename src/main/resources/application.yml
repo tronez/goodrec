@@ -1,0 +1,8 @@
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+app:
+  auth:
+    tokenSecret: bulbazaurus666!@#$%^&*()
+    tokenExpirationMsec: 600000

@@ -17,13 +17,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsService userDetailsService;
     private final TokenProvider tokenProvider;
+    private final UserDetailsService userDetailsService;
 
-    SecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
-                   TokenProvider tokenProvider) {
-        this.userDetailsService = userDetailsService;
+    public SecurityConfig(TokenProvider tokenProvider,
+                          @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
         this.tokenProvider = tokenProvider;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -38,7 +38,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .addFilter(new JwtAuthenticationFilter(tokenProvider))
                 .addFilterAfter(new JwtTokenVerifier(tokenProvider), JwtAuthenticationFilter.class);
