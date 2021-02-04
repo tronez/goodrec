@@ -1,8 +1,10 @@
-package com.goodrec.user;
+package com.goodrec.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goodrec.exception.BadRequestException;
+import com.goodrec.exception.ResourceNotFoundException;
 import com.goodrec.security.TokenProvider;
+import com.goodrec.user.UserController;
 import com.goodrec.user.domain.UserDetailsServiceImpl;
 import com.goodrec.user.domain.UserService;
 import com.goodrec.user.dto.RegisterRequest;
@@ -16,10 +18,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.UUID;
+
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -45,8 +50,8 @@ class UserControllerTest {
     private UserService userService;
 
     @Test
-    @DisplayName("Should successfully create new user and return valid information: status, location")
-    void registerCreate() throws Exception {
+    @DisplayName("Should return CREATED status with location header when registering user")
+    void userRegistration_success() throws Exception {
 //        given
         RegisterRequest request = UserCreator.createRegisterRequest();
         UserResponse response = UserCreator.createResponseFrom(request);
@@ -61,8 +66,8 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("Should return 400 code when client tried to register with taken email")
-    void registerCreate_takenEmail() throws Exception {
+    @DisplayName("Should return BAD REQUEST status when client tried to register with taken email")
+    void userRegistration_fail_takenEmail() throws Exception {
 //        given
         RegisterRequest request = UserCreator.createRegisterRequest();
         willThrow(new BadRequestException("Email address already in use")).given(userService).create(any());
@@ -73,8 +78,8 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("Should return validation error messages when trying to register with invalid data")
-    void registerValidation() throws Exception {
+    @DisplayName("Should return BAD REQUEST status and error messages when trying to register with wrong data")
+    void userRegistration_fail_invalidData() throws Exception {
 //        given
         RegisterRequest request = UserCreator.createRegisterRequestWithInvalidEmail();
         String expectedResponse =
@@ -87,6 +92,62 @@ class UserControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString(expectedResponse)));
 
+    }
+
+    @Test
+    @DisplayName("Should return OK status and body containing user information when getting existing user")
+    void getUserByUUID_success() throws Exception {
+//        given
+        UserResponse response = UserCreator.createResponse();
+        UUID userUuid = response.getUuid();
+        String jsonResponse = mapper.writeValueAsString(response);
+        given(userService.findByUUID(userUuid)).willReturn(response);
+//        when
+        ResultActions getUser = mockMvc.perform(get("/api/users/" + userUuid.toString()));
+//        then
+        getUser
+                .andExpect(status().isOk())
+                .andExpect(content().string(jsonResponse));
+    }
+
+    @Test
+    @DisplayName("Should return NOT FOUND status when there is no user in system")
+    void getUserByUUID_fail_nonExistingUser() throws Exception {
+//        given
+        UserResponse response = UserCreator.createResponse();
+        UUID responseUuid = response.getUuid();
+        willThrow(new ResourceNotFoundException("Not found")).given(userService).findByUUID(responseUuid);
+//        when
+        ResultActions getUser = mockMvc.perform(get("/api/users" + responseUuid.toString()));
+//        then
+        getUser.andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Should return OK status and body containing user information when getting existing user")
+    void getUserByEmail_success() throws Exception {
+//        given
+        UserResponse response = UserCreator.createResponse();
+        String jsonResponse = mapper.writeValueAsString(response);
+        given(userService.findByEmail(response.getEmail())).willReturn(response);
+//        when
+        ResultActions getUser = mockMvc.perform(get("/api/users?email=" + response.getEmail()));
+//        then
+        getUser
+                .andExpect(status().isOk())
+                .andExpect(content().string(jsonResponse));
+    }
+
+    @Test
+    @DisplayName("Should return NOT FOUND status when there is no user in system")
+    void getUserByEmail_fail_nonExistingUser() throws Exception {
+//        given
+        UserResponse response = UserCreator.createResponse();
+        willThrow(new ResourceNotFoundException("Not found")).given(userService).findByEmail(response.getEmail());
+//        when
+        ResultActions getUser = mockMvc.perform(get("/api/users?email=" + response.getEmail()));
+//        then
+        getUser.andExpect(status().isNotFound());
     }
 
     private ResultActions performRegistrationWith(RegisterRequest request) throws Exception {

@@ -34,10 +34,10 @@ public class UserService {
                 .toUserResponse();
     }
 
-    public UserResponse findByUUID(String uuid) {
+    public UserResponse findByUUID(UUID uuid) {
 
         return repository
-                .findById(UUID.fromString(uuid))
+                .findById(uuid)
                 .map(User::toUserResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("User was not found."));
     }
@@ -48,10 +48,5 @@ public class UserService {
                 .findByEmail(email)
                 .map(User::toUserResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("User was not found."));
-    }
-
-    public void deleteByUUID(String uuid) {
-
-        repository.deleteById(UUID.fromString(uuid));
     }
 }

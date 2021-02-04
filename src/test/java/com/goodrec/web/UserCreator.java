@@ -1,4 +1,4 @@
-package com.goodrec.user;
+package com.goodrec.web;
 
 import com.goodrec.user.dto.RegisterRequest;
 import com.goodrec.user.dto.UserResponse;
@@ -17,5 +17,9 @@ class UserCreator {
 
     static UserResponse createResponseFrom(RegisterRequest request) {
         return new UserResponse(UUID.randomUUID(), request.getEmail(), request.getPassword());
+    }
+
+    static UserResponse createResponse() {
+        return new UserResponse(UUID.randomUUID(), "simplemail@gmail.com", "simplepassword1");
     }
 }
