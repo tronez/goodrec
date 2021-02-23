@@ -9,25 +9,25 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.UUID;
 
+import static com.goodrec.security.JwtConstants.TOKEN_PREFIX;
+
 @Service
-public class JwtsTokenProvider implements TokenProvider {
+public class JJWTTokenProvider implements TokenProvider {
 
     private final ApplicationProperties appProperties;
 
-    JwtsTokenProvider(ApplicationProperties appProperties) {
+    public JJWTTokenProvider(ApplicationProperties appProperties) {
         this.appProperties = appProperties;
     }
 
     @Override
-    public String createToken(Authentication authentication) {
-
-        final UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+    public String createToken(UserPrincipal userPrincipal) {
 
         final Date now = new Date();
         final Date expirationDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
@@ -41,7 +41,18 @@ public class JwtsTokenProvider implements TokenProvider {
     }
 
     @Override
+    public String getJwtFromHeader(String authHeader) {
+
+        if (StringUtils.hasText(authHeader) && authHeader.startsWith(TOKEN_PREFIX)) {
+            return authHeader.replace(TOKEN_PREFIX, "");
+        }
+
+        return "";
+    }
+
+    @Override
     public UUID getUserUUIDFromToken(String token) {
+
         final Claims claims = Jwts.parser()
                 .setSigningKey(appProperties.getAuth().getTokenSecret())
                 .parseClaimsJws(token)
@@ -51,12 +62,12 @@ public class JwtsTokenProvider implements TokenProvider {
     }
 
     @Override
-    public boolean validateToken(String authToken) {
+    public boolean validateToken(String token) {
 
         try {
             Jwts.parser()
                     .setSigningKey(appProperties.getAuth().getTokenSecret())
-                    .parseClaimsJws(authToken);
+                    .parseClaimsJws(token);
 
             return true;
         } catch (SignatureException ex) {

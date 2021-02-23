@@ -1,19 +1,17 @@
-package com.goodrec.recipe;
+package com.goodrec.recipe.dto;
 
-import org.springframework.data.annotation.Id;
+import com.goodrec.recipe.domain.Unit;
 
-import java.util.UUID;
+public class NewIngredientRequest {
 
-class Ingredient {
-
-    @Id
-    private UUID uuid;
     private String name;
     private Double amount;
     private Unit unit;
 
-    public UUID getUuid() {
-        return uuid;
+    public NewIngredientRequest(String name, Double amount, Unit unit) {
+        this.name = name;
+        this.amount = amount;
+        this.unit = unit;
     }
 
     public String getName() {

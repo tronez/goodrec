@@ -1,6 +1,7 @@
 package com.goodrec.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.goodrec.user.domain.UserPrincipal;
 import com.goodrec.user.dto.LoginRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -49,7 +50,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
 
-        String token = tokenProvider.createToken(authResult);
+        final UserPrincipal principal = (UserPrincipal) authResult.getPrincipal();
+        String token = tokenProvider.createToken(principal);
         response.setHeader(HEADER_STRING, TOKEN_PREFIX + token);
     }
 }

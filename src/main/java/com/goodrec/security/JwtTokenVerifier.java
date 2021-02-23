@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.UUID;
 
 import static com.goodrec.security.JwtConstants.HEADER_STRING;
-import static com.goodrec.security.JwtConstants.TOKEN_PREFIX;
 
 public class JwtTokenVerifier extends OncePerRequestFilter {
 
@@ -34,11 +33,12 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         try {
-            String token = getJwtFromRequest(request);
+            String header = request.getHeader(HEADER_STRING);
+            String jwt = tokenProvider.getJwtFromHeader(header);
 
-            if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
+            if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
 
-                UUID uuid = tokenProvider.getUserUUIDFromToken(token);
+                UUID uuid = tokenProvider.getUserUUIDFromToken(jwt);
                 UserPrincipal principal = userDetailsService.loadUserByUUID(uuid);
 
                 Authentication auth = new UsernamePasswordAuthenticationToken(
@@ -53,15 +53,5 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
             System.err.println("Could not set user authentication in security context");
         }
         filterChain.doFilter(request, response);
-    }
-
-    private String getJwtFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader(HEADER_STRING);
-
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(TOKEN_PREFIX)) {
-            return bearerToken.replace(TOKEN_PREFIX, "");
-        }
-
-        return "";
     }
 }

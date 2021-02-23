@@ -1,6 +1,6 @@
-package com.goodrec.recipe;
+package com.goodrec.recipe.domain;
 
-enum Unit {
+public enum Unit {
 
     TEASPOON,
     TABLESPOON,
