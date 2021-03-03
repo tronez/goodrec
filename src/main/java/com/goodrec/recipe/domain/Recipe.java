@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 class Recipe {
 
     @Id
-    private UUID uuid;
-    private UUID userUuid;
+    private UUID id;
+    private UUID userId;
     private String name;
     private Integer cookingTime;
     private Integer servings;
@@ -32,10 +32,10 @@ class Recipe {
     public Recipe() {
     }
 
-    public Recipe(UUID uuid, UUID userUuid, String name, Integer cookingTime, Integer servings, String directions,
+    public Recipe(UUID id, UUID userId, String name, Integer cookingTime, Integer servings, String directions,
                   Difficulty difficulty, List<Ingredient> ingredientList, List<Category> categories, Binary image) {
-        this.uuid = uuid;
-        this.userUuid = userUuid;
+        this.id = id;
+        this.userId = userId;
         this.name = name;
         this.cookingTime = cookingTime;
         this.servings = servings;
@@ -66,8 +66,6 @@ class Recipe {
                 ingredients,
                 categories,
                 request.getImageBase64());
-
-
     }
 
     RecipeDto toDto() {
@@ -80,8 +78,8 @@ class Recipe {
                 .map(Category::toDto)
                 .collect(Collectors.toList());
 
-        return new RecipeDto(uuid,
-                userUuid,
+        return new RecipeDto(id,
+                userId,
                 name,
                 cookingTime,
                 servings,
@@ -92,12 +90,12 @@ class Recipe {
                 categoryDtos);
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public UUID getId() {
+        return id;
     }
 
-    public UUID getUserUuid() {
-        return userUuid;
+    public UUID getUserId() {
+        return userId;
     }
 
     public String getName() {
@@ -130,5 +128,55 @@ class Recipe {
 
     public List<Category> getCategories() {
         return categories;
+    }
+
+    public Recipe setId(UUID id) {
+        this.id = id;
+        return this;
+    }
+
+    public Recipe setUserId(UUID userId) {
+        this.userId = userId;
+        return this;
+    }
+
+    public Recipe setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public Recipe setCookingTime(Integer cookingTime) {
+        this.cookingTime = cookingTime;
+        return this;
+    }
+
+    public Recipe setServings(Integer servings) {
+        this.servings = servings;
+        return this;
+    }
+
+    public Recipe setDirections(String directions) {
+        this.directions = directions;
+        return this;
+    }
+
+    public Recipe setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
+        return this;
+    }
+
+    public Recipe setIngredientList(List<Ingredient> ingredientList) {
+        this.ingredientList = ingredientList;
+        return this;
+    }
+
+    public Recipe setCategories(List<Category> categories) {
+        this.categories = categories;
+        return this;
+    }
+
+    public Recipe setImage(Binary image) {
+        this.image = image;
+        return this;
     }
 }

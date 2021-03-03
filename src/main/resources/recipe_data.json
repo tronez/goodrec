@@ -1,0 +1,380 @@
+[
+  {
+    "_class": "com.goodrec.recipe.domain.Recipe",
+    "id": "9537aa34-d5cf-49b2-b087-2a080ae6171a",
+    "userId": "fcbaf08f-7c6c-454a-90f1-c204627ac49b",
+    "name": "Oatmeal",
+    "cookingTime": 1,
+    "servings": 0,
+    "directions": "Put milk",
+    "difficulty": "EASY",
+    "image": {
+      "data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=="
+    },
+    "ingredientList": [
+      {
+        "uuid": "58f5cca7-9b5e-41d0-bb2e-9b2ba7c971a4",
+        "name": "MILK",
+        "amount": 500,
+        "unit": "MILLILITER"
+      }
+    ],
+    "categories": [
+      {
+        "name": "POLISH"
+      },
+      {
+        "name": "THAI"
+      }
+    ]
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Recipe",
+    "id": "29ce91c4-31d5-4483-b532-4d5915b69b15",
+    "userId": "fcbaf08f-7c6c-454a-90f1-c204627ac49b",
+    "name": "Pizza",
+    "cookingTime": 30,
+    "servings": 4,
+    "directions": "string",
+    "difficulty": "EASY",
+    "image": {
+      "data": [
+        1,
+        2,
+        3
+      ]
+    },
+    "ingredientList": [
+      {
+        "uuid": "12fb2a5b-fc14-42c5-97ee-f55e22fcb59c",
+        "name": "string",
+        "amount": 0.0,
+        "unit": "TEASPOON"
+      }
+    ],
+    "categories": [
+      {
+        "name": "string"
+      }
+    ]
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Recipe",
+    "id": "9337aa34-d5cf-49b2-b087-2a080ae6171a",
+    "userId": "fcbaf08f-7c6c-454a-90f1-c204627ac49b",
+    "name": "Oatmeal",
+    "cookingTime": 1,
+    "servings": 0,
+    "directions": "Put milk",
+    "difficulty": "EASY",
+    "image": {
+      "data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=="
+    },
+    "ingredientList": [
+      {
+        "uuid": "58f5cca7-9b5e-41d0-bb2e-9b2ba7c971a4",
+        "name": "MILK",
+        "amount": 500,
+        "unit": "MILLILITER"
+      }
+    ],
+    "categories": [
+      {
+        "name": "POLISH"
+      },
+      {
+        "name": "THAI"
+      }
+    ]
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Recipe",
+    "id": "9227aa34-d5cf-49b2-b087-2a080ae6171a",
+    "userId": "fcbaf08f-7c6c-454a-90f1-c204627ac49b",
+    "name": "Oatmeal",
+    "cookingTime": 1,
+    "servings": 0,
+    "directions": "Put milk",
+    "difficulty": "EASY",
+    "image": {
+      "data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=="
+    },
+    "ingredientList": [
+      {
+        "uuid": "58f5cca7-9b5e-41d0-bb2e-9b2ba7c971a4",
+        "name": "MILK",
+        "amount": 500,
+        "unit": "MILLILITER"
+      }
+    ],
+    "categories": [
+      {
+        "name": "POLISH"
+      },
+      {
+        "name": "THAI"
+      }
+    ]
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Recipe",
+    "id": "9137aa34-d5cf-49b2-b087-2a080ae6171a",
+    "userId": "fcbaf08f-7c6c-454a-90f1-c204627ac49b",
+    "name": "Oatmeal",
+    "cookingTime": 1,
+    "servings": 0,
+    "directions": "Put milk",
+    "difficulty": "EASY",
+    "image": {
+      "data" : "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=="
+    },
+    "ingredientList": [
+      {
+        "uuid": "58f5cca7-9b5e-41d0-bb2e-9b2ba7c971a4",
+        "name": "MILK",
+        "amount": 500,
+        "unit": "MILLILITER"
+      }
+    ],
+    "categories": [
+      {
+        "name": "POLISH"
+      },
+      {
+        "name": "THAI"
+      }
+    ]
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Recipe",
+    "id": "8537aa34-d5cf-49b2-b087-2a080ae6171a",
+    "userId": "fcbaf08f-7c6c-454a-90f1-c204627ac49b",
+    "name": "Oatmeal",
+    "cookingTime": 1,
+    "servings": 0,
+    "directions": "Put milk",
+    "difficulty": "EASY",
+    "image": {
+      "data" : "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=="
+    },
+    "ingredientList": [
+      {
+        "uuid": "58f5cca7-9b5e-41d0-bb2e-9b2ba7c971a4",
+        "name": "MILK",
+        "amount": 500,
+        "unit": "MILLILITER"
+      }
+    ],
+    "categories": [
+      {
+        "name": "POLISH"
+      },
+      {
+        "name": "THAI"
+      }
+    ]
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Recipe",
+    "id": "7537aa34-d5cf-49b2-b087-2a080ae6171a",
+    "userId": "fcbaf08f-7c6c-454a-90f1-c204627ac49b",
+    "name": "Oatmeal",
+    "cookingTime": 1,
+    "servings": 0,
+    "directions": "Put milk",
+    "difficulty": "EASY",
+    "image": {
+      "data" : "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=="
+    },
+    "ingredientList": [
+      {
+        "uuid": "58f5cca7-9b5e-41d0-bb2e-9b2ba7c971a4",
+        "name": "MILK",
+        "amount": 500,
+        "unit": "MILLILITER"
+      }
+    ],
+    "categories": [
+      {
+        "name": "POLISH"
+      },
+      {
+        "name": "THAI"
+      }
+    ]
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Recipe",
+    "id": "6537aa34-d5cf-49b2-b087-2a080ae6171a",
+    "userId": "fcbaf08f-7c6c-454a-90f1-c204627ac49b",
+    "name": "Oatmeal",
+    "cookingTime": 1,
+    "servings": 0,
+    "directions": "Put milk",
+    "difficulty": "EASY",
+    "image": {
+      "data" : "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=="
+    },
+    "ingredientList": [
+      {
+        "uuid": "58f5cca7-9b5e-41d0-bb2e-9b2ba7c971a4",
+        "name": "MILK",
+        "amount": 500,
+        "unit": "MILLILITER"
+      }
+    ],
+    "categories": [
+      {
+        "name": "POLISH"
+      },
+      {
+        "name": "THAI"
+      }
+    ]
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Recipe",
+    "id": "5537aa34-d5cf-49b2-b087-2a080ae6171a",
+    "userId": "fcbaf08f-7c6c-454a-90f1-c204627ac49b",
+    "name": "Oatmeal",
+    "cookingTime": 1,
+    "servings": 0,
+    "directions": "Put milk",
+    "difficulty": "EASY",
+    "image": {
+      "data" : "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=="
+    },
+    "ingredientList": [
+      {
+        "uuid": "58f5cca7-9b5e-41d0-bb2e-9b2ba7c971a4",
+        "name": "MILK",
+        "amount": 500,
+        "unit": "MILLILITER"
+      }
+    ],
+    "categories": [
+      {
+        "name": "POLISH"
+      },
+      {
+        "name": "THAI"
+      }
+    ]
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Recipe",
+    "id": "4537aa34-d5cf-49b2-b087-2a080ae6171a",
+    "userId": "fcbaf08f-7c6c-454a-90f1-c204627ac49b",
+    "name": "Oatmeal",
+    "cookingTime": 1,
+    "servings": 0,
+    "directions": "Put milk",
+    "difficulty": "EASY",
+    "image": {
+      "data" : "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=="
+    },
+    "ingredientList": [
+      {
+        "uuid": "58f5cca7-9b5e-41d0-bb2e-9b2ba7c971a4",
+        "name": "MILK",
+        "amount": 500,
+        "unit": "MILLILITER"
+      }
+    ],
+    "categories": [
+      {
+        "name": "POLISH"
+      },
+      {
+        "name": "THAI"
+      }
+    ]
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Recipe",
+    "id": "3537aa34-d5cf-49b2-b087-2a080ae6171a",
+    "userId": "fcbaf08f-7c6c-454a-90f1-c204627ac49b",
+    "name": "Oatmeal",
+    "cookingTime": 1,
+    "servings": 0,
+    "directions": "Put milk",
+    "difficulty": "EASY",
+    "image": {
+      "data" : "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=="
+    },
+    "ingredientList": [
+      {
+        "uuid": "58f5cca7-9b5e-41d0-bb2e-9b2ba7c971a4",
+        "name": "MILK",
+        "amount": 500,
+        "unit": "MILLILITER"
+      }
+    ],
+    "categories": [
+      {
+        "name": "POLISH"
+      },
+      {
+        "name": "THAI"
+      }
+    ]
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Recipe",
+    "id": "2537aa34-d5cf-49b2-b087-2a080ae6171a",
+    "userId": "fcbaf08f-7c6c-454a-90f1-c204627ac49b",
+    "name": "Oatmeal",
+    "cookingTime": 1,
+    "servings": 0,
+    "directions": "Put milk",
+    "difficulty": "EASY",
+    "image": {
+      "data" : "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=="
+    },
+    "ingredientList": [
+      {
+        "uuid": "58f5cca7-9b5e-41d0-bb2e-9b2ba7c971a4",
+        "name": "MILK",
+        "amount": 500,
+        "unit": "MILLILITER"
+      }
+    ],
+    "categories": [
+      {
+        "name": "POLISH"
+      },
+      {
+        "name": "THAI"
+      }
+    ]
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Recipe",
+    "id": "1537aa34-d5cf-49b2-b087-2a080ae6171a",
+    "userId": "fcbaf08f-7c6c-454a-90f1-c204627ac49b",
+    "name": "Oatmeal",
+    "cookingTime": 1,
+    "servings": 0,
+    "directions": "Put milk",
+    "difficulty": "EASY",
+    "image": {
+      "data" : "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=="
+    },
+    "ingredientList": [
+      {
+        "uuid": "58f5cca7-9b5e-41d0-bb2e-9b2ba7c971a4",
+        "name": "MILK",
+        "amount": 500,
+        "unit": "MILLILITER"
+      }
+    ],
+    "categories": [
+      {
+        "name": "POLISH"
+      },
+      {
+        "name": "THAI"
+      }
+    ]
+  }
+]

@@ -35,7 +35,6 @@ public class UserService {
     }
 
     public UserResponse findByUUID(UUID uuid) {
-
         return repository
                 .findById(uuid)
                 .map(User::toUserResponse)

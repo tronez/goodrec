@@ -40,6 +40,7 @@ class RecipeFacadeTest {
     @DisplayName("Should add a recipe and return correct DTO")
     void shouldAddRecipe() throws IOException {
 //        given
+        System.out.println(app.getAuth().getTokenSecret());
         String token = tokenProvider.createToken(UserAuthFactory.createSimplePrincipal());
         NewRecipeRequest expectedRecipe = RecipeFactory.createNewRequest();
 //        when

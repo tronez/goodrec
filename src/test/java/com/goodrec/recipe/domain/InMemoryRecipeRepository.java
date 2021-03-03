@@ -17,7 +17,7 @@ public class InMemoryRecipeRepository implements RecipeRepository {
     @Override
     public Recipe save(Recipe recipe) {
         requireNonNull(recipe);
-        map.put(recipe.getUuid(), recipe);
+        map.put(recipe.getId(), recipe);
         return recipe;
     }
 

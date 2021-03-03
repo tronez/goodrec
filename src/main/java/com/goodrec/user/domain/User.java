@@ -10,22 +10,25 @@ import java.util.UUID;
 class User {
 
     @Id
-    private UUID uuid;
+    private UUID id;
     private String email;
     private String password;
 
-    User(UUID uuid, String email, String password) {
-        this.uuid = uuid;
+    public User() {
+    }
+
+    User(UUID id, String email, String password) {
+        this.id = id;
         this.email = email;
         this.password = password;
     }
 
     UserResponse toUserResponse() {
-        return new UserResponse(uuid, email, password);
+        return new UserResponse(id, email, password);
     }
 
-    UUID getUuid() {
-        return uuid;
+    UUID getId() {
+        return id;
     }
 
     String getEmail() {
@@ -34,5 +37,20 @@ class User {
 
     String getPassword() {
         return password;
+    }
+
+    User setId(UUID id) {
+        this.id = id;
+        return this;
+    }
+
+    User setEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    User setPassword(String password) {
+        this.password = password;
+        return this;
     }
 }

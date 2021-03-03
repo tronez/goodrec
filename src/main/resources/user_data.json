@@ -1,0 +1,8 @@
+[
+  {
+    "_class" : "com.goodrec.user.domain.User",
+    "id" : "fcbaf08f-7c6c-454a-90f1-c204627ac49b",
+    "email": "kamil@gmail.com",
+    "password": "kamil12345"
+  }
+]
