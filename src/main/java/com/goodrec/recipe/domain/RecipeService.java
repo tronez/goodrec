@@ -2,6 +2,8 @@ package com.goodrec.recipe.domain;
 
 import com.goodrec.exception.ResourceNotFoundException;
 import com.goodrec.recipe.dto.RecipeDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -24,14 +26,20 @@ class RecipeService {
                 .toDto();
     }
 
-    public RecipeDto getByUUID(UUID recipeUUID) {
+    public RecipeDto getByUUID(UUID uuid) {
         return recipeRepository
-                .findById(recipeUUID)
+                .findById(uuid)
                 .map(Recipe::toDto)
-                .orElseThrow(() -> new ResourceNotFoundException("Recipe was not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(Recipe.class, uuid));
     }
 
     public void deleteByUUID(UUID recipeUUID) {
         recipeRepository.deleteById(recipeUUID);
+    }
+
+    public Page<RecipeDto> findAll(Pageable pageable) {
+        return recipeRepository
+                .findAll(pageable)
+                .map(Recipe::toDto);
     }
 }

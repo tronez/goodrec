@@ -1,7 +1,6 @@
 package com.goodrec.recipe.dto;
 
 import com.goodrec.recipe.domain.Unit;
-import io.swagger.models.auth.In;
 
 import java.util.UUID;
 

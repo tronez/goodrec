@@ -1,4 +1,4 @@
-package com.goodrec.config.serialization;
+package com.goodrec.config.serializer;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;

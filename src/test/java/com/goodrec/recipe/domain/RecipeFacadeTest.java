@@ -1,10 +1,11 @@
 package com.goodrec.recipe.domain;
 
-import com.goodrec.config.ApplicationProperties;
+import com.goodrec.testdata.RecipeCreator;
+import com.goodrec.testdata.TokenCreator;
+import com.goodrec.testdata.PrincipalCreator;
 import com.goodrec.exception.ResourceNotFoundException;
 import com.goodrec.recipe.dto.NewRecipeRequest;
 import com.goodrec.recipe.dto.RecipeDto;
-import com.goodrec.security.JJWTTokenProvider;
 import com.goodrec.security.TokenProvider;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -22,27 +23,24 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class RecipeFacadeTest {
 
     private static final String RESOURCE_NOT_FOUND_MESSAGE = "Recipe was not found";
-    private static ApplicationProperties app = new ApplicationProperties();
     private RecipeService recipeService = new RecipeService(new InMemoryRecipeRepository());
     private CategoryService categoryService = new CategoryService(new InMemoryCategoryRepository());
-    private TokenProvider tokenProvider = new JJWTTokenProvider(app);
+    private TokenProvider tokenProvider = new TokenCreator();
     private RecipeFacade cut = new RecipeFacade(recipeService, categoryService, tokenProvider);
 
     private MultipartFile image = new MockMultipartFile("Image", "base64".getBytes());
 
     @BeforeAll
     static void beforeAll() {
-        app.getAuth().setTokenSecret("secret");
-        app.getAuth().setTokenExpirationMsec(600000);
+        TokenCreator.setTokenSimpleConfig();
     }
 
     @Test
     @DisplayName("Should add a recipe and return correct DTO")
     void shouldAddRecipe() throws IOException {
 //        given
-        System.out.println(app.getAuth().getTokenSecret());
-        String token = tokenProvider.createToken(UserAuthFactory.createSimplePrincipal());
-        NewRecipeRequest expectedRecipe = RecipeFactory.createNewRequest();
+        String token = tokenProvider.createToken(PrincipalCreator.createSimplePrincipal());
+        NewRecipeRequest expectedRecipe = RecipeCreator.createNewRequest();
 //        when
         RecipeDto actualRecipe = cut.createRecipe(image, expectedRecipe, token);
 //        then
@@ -53,8 +51,8 @@ class RecipeFacadeTest {
     @DisplayName("Should add a recipe with doubled categories and save only one")
     void shouldAddRecipeWithDoubledCategories() throws IOException {
 //        given
-        String token = tokenProvider.createToken(UserAuthFactory.createSimplePrincipal());
-        NewRecipeRequest expectedRecipe = RecipeFactory.createWithDoubledCategories();
+        String token = tokenProvider.createToken(PrincipalCreator.createSimplePrincipal());
+        NewRecipeRequest expectedRecipe = RecipeCreator.createWithDoubledCategories();
 //        when
         RecipeDto actualRecipe = cut.createRecipe(image, expectedRecipe, token);
 //        then
@@ -66,8 +64,8 @@ class RecipeFacadeTest {
     @DisplayName("Should get recipe by uuid and return correct recipe DTO")
     void shouldGetRecipeByUUIDAndReturnCorrectDto() {
 //        given
-        String token = tokenProvider.createToken(UserAuthFactory.createSimplePrincipal());
-        NewRecipeRequest request = RecipeFactory.createNewRequest();
+        String token = tokenProvider.createToken(PrincipalCreator.createSimplePrincipal());
+        NewRecipeRequest request = RecipeCreator.createNewRequest();
         RecipeDto expectedRecipe = cut.createRecipe(image, request, token);
 //        when
         RecipeDto actualRecipe = cut.getRecipeByUUID(expectedRecipe.getUuid());
@@ -91,8 +89,8 @@ class RecipeFacadeTest {
     @DisplayName("Should delete recipe on correct uuid and if recipe belongs to user")
     void shouldDeleteRecipe() {
 //        given
-        String token = tokenProvider.createToken(UserAuthFactory.createSimplePrincipal());
-        NewRecipeRequest request = RecipeFactory.createNewRequest();
+        String token = tokenProvider.createToken(PrincipalCreator.createSimplePrincipal());
+        NewRecipeRequest request = RecipeCreator.createNewRequest();
         RecipeDto savedRecipe = cut.createRecipe(image, request, token);
 //        when
         cut.deleteRecipe(savedRecipe.getUuid(), token);
@@ -116,10 +114,10 @@ class RecipeFacadeTest {
     @DisplayName("Should not delete other user recipe")
     void shouldNotDeleteRecipeWhenRecipeDontBelongToUser() {
 //        given
-        String token = tokenProvider.createToken(UserAuthFactory.createSimplePrincipal());
-        NewRecipeRequest request = RecipeFactory.createNewRequest();
+        String token = tokenProvider.createToken(PrincipalCreator.createSimplePrincipal());
+        NewRecipeRequest request = RecipeCreator.createNewRequest();
         RecipeDto expectedRecipe = cut.createRecipe(image, request, token);
-        String otherUserToken = tokenProvider.createToken(UserAuthFactory.createFrom("mail@op.pl", "12345"));
+        String otherUserToken = tokenProvider.createToken(PrincipalCreator.createFrom("mail@op.pl", "12345"));
 //        when
         cut.deleteRecipe(expectedRecipe.getUuid(), otherUserToken);
 //        then

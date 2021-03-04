@@ -6,7 +6,6 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Set;
-import java.util.UUID;
 
 @Document
 class Category {
@@ -22,12 +21,11 @@ class Category {
     }
 
     static Category createFrom(CategoryDto dto) {
-        final String lowercaseName = dto.getName().toLowerCase();
-        return new Category(lowercaseName);
+        return new Category(dto.getName());
     }
 
     CategoryDto toDto() {
-        return new CategoryDto(name);
+        return new CategoryDto(CategoryEnum.valueOf(name));
     }
 
     @DBRef

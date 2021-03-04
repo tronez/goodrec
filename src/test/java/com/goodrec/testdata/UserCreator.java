@@ -1,25 +1,25 @@
-package com.goodrec.web;
+package com.goodrec.testdata;
 
 import com.goodrec.user.dto.RegisterRequest;
 import com.goodrec.user.dto.UserResponse;
 
 import java.util.UUID;
 
-class UserCreator {
+public class UserCreator {
 
-    static RegisterRequest createRegisterRequest() {
+    public static RegisterRequest createRegisterRequest() {
         return new RegisterRequest("simplemail@gmail.com", "simplepassword1");
     }
 
-    static RegisterRequest createRegisterRequestWithInvalidEmail() {
+    public static RegisterRequest createRegisterRequestWithInvalidEmail() {
         return new RegisterRequest("invalid", "1");
     }
 
-    static UserResponse createResponseFrom(RegisterRequest request) {
+    public static UserResponse createResponseFrom(RegisterRequest request) {
         return new UserResponse(UUID.randomUUID(), request.getEmail(), request.getPassword());
     }
 
-    static UserResponse createResponse() {
+    public static UserResponse createResponse() {
         return new UserResponse(UUID.randomUUID(), "simplemail@gmail.com", "simplepassword1");
     }
 }

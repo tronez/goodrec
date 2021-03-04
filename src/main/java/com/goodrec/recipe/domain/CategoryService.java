@@ -17,13 +17,11 @@ class CategoryService {
 
     CategoryDto saveRecipe(CategoryDto dto) {
 
-        final String lowercaseName = dto.getName().toLowerCase();
-        final var lowercaseRecipeDto = new CategoryDto(lowercaseName);
-        if (repository.existsById(lowercaseName)) {
-            return lowercaseRecipeDto;
+        if (repository.existsById(dto.getName())) {
+            return dto;
         }
 
-        final Category category = Category.createFrom(lowercaseRecipeDto);
+        final Category category = Category.createFrom(dto);
         return repository
                 .save(category)
                 .toDto();

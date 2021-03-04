@@ -1,9 +1,10 @@
-package com.goodrec.web;
+package com.goodrec.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goodrec.exception.BadRequestException;
 import com.goodrec.exception.ResourceNotFoundException;
 import com.goodrec.security.TokenProvider;
+import com.goodrec.testdata.UserCreator;
 import com.goodrec.user.UserController;
 import com.goodrec.user.domain.UserDetailsServiceImpl;
 import com.goodrec.user.domain.UserService;
@@ -32,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(UserController.class)
-class UserControllerTest {
+class TestUserApi {
 
     @Autowired
     private MockMvc mockMvc;
@@ -42,10 +43,8 @@ class UserControllerTest {
 
     @MockBean
     private TokenProvider tokenProvider;
-
     @MockBean
     private UserDetailsServiceImpl userDetailsService;
-
     @MockBean
     private UserService userService;
 

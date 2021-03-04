@@ -1,18 +1,21 @@
-package com.goodrec.recipe.domain;
+package com.goodrec.testdata;
 
+import com.goodrec.recipe.domain.CategoryEnum;
+import com.goodrec.recipe.domain.Difficulty;
+import com.goodrec.recipe.domain.Unit;
 import com.goodrec.recipe.dto.CategoryDto;
 import com.goodrec.recipe.dto.NewIngredientRequest;
 import com.goodrec.recipe.dto.NewRecipeRequest;
 
 import java.util.List;
 
-class RecipeFactory {
+public class RecipeCreator {
 
     public static NewRecipeRequest createNewRequest() {
         var oats = new NewIngredientRequest("oats", 0.5, Unit.CUP);
         var milk = new NewIngredientRequest("milk", 0.5, Unit.CUP);
         var water = new NewIngredientRequest("water", 0.5, Unit.CUP);
-        var breakfastCategory = new CategoryDto("breakfast");
+        var breakfastCategory = new CategoryDto(CategoryEnum.ENGLISH);
         var recipe = new NewRecipeRequest();
         recipe.setName("oatmeal")
                 .setCookingTime(5)
@@ -29,11 +32,15 @@ class RecipeFactory {
 
     public static NewRecipeRequest createWithDoubledCategories() {
         var recipe = createNewRequest();
-        List<CategoryDto> categories = List.of(new CategoryDto("breakfast"),
-                new CategoryDto("BREAKFAST"),
-                new CategoryDto("BreakFast"));
+        List<CategoryDto> categories = List.of(
+                new CategoryDto(CategoryEnum.ENGLISH),
+                new CategoryDto(CategoryEnum.ENGLISH));
 
         recipe.setCategories(categories);
         return recipe;
+    }
+
+    public static NewRecipeRequest createBadRequest() {
+        return new NewRecipeRequest();
     }
 }

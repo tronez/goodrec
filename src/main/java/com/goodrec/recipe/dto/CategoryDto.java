@@ -1,18 +1,20 @@
 package com.goodrec.recipe.dto;
 
+import com.goodrec.recipe.domain.CategoryEnum;
+
 public class CategoryDto {
 
-    private String name;
+    private CategoryEnum name;
 
     public CategoryDto() {
     }
 
-    public CategoryDto(String name) {
+    public CategoryDto(CategoryEnum name) {
         this.name = name;
     }
 
     public String getName() {
-        return name;
+        return name.toString();
     }
 
     @Override
@@ -22,7 +24,7 @@ public class CategoryDto {
 
         CategoryDto that = (CategoryDto) o;
 
-        return name != null ? name.equals(that.name) : that.name == null;
+        return name == that.name;
     }
 
     @Override

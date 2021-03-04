@@ -1,4 +1,4 @@
-package com.goodrec.recipe.domain;
+package com.goodrec.testdata;
 
 import com.goodrec.user.domain.UserPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -6,16 +6,23 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Collections;
 import java.util.UUID;
 
-class UserAuthFactory {
+public class PrincipalCreator {
 
-    static UserPrincipal createSimplePrincipal() {
+    public static UserPrincipal createSimplePrincipal() {
         return new UserPrincipal(UUID.randomUUID(),
                 "kamil@gmail.com",
-                "123456",
+                "kamil12345",
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
     }
 
-    static UserPrincipal createFrom(String email, String password) {
+    public static UserPrincipal principalOf(UUID uuid, String mail, String password) {
+        return new UserPrincipal(uuid,
+                mail,
+                password,
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+    }
+
+    public static UserPrincipal createFrom(String email, String password) {
         return new UserPrincipal(UUID.randomUUID(),
                 email,
                 password,

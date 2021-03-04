@@ -4,6 +4,8 @@ import com.goodrec.recipe.domain.RecipeFacade;
 import com.goodrec.recipe.dto.NewRecipeRequest;
 import com.goodrec.recipe.dto.RecipeDto;
 import com.goodrec.security.TokenProvider;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,9 +38,8 @@ public class RecipeController {
 
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<RecipeDto> create(@RequestPart(value = "image") MultipartFile image,
-                                            @RequestPart @Valid NewRecipeRequest request,
+                                            @RequestPart(value = "request") @Valid NewRecipeRequest request,
                                             @RequestHeader(HEADER_STRING) String header) {
-
 
         final String token = tokenProvider.getJwtFromHeader(header);
         final RecipeDto dto = facade.createRecipe(image, request, token);
@@ -67,7 +68,13 @@ public class RecipeController {
         final String token = tokenProvider.getJwtFromHeader(header);
         facade.deleteRecipe(uuid, token);
         return ResponseEntity
-                .ok()
+                .noContent()
                 .build();
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<RecipeDto>> findAll(Pageable pageable) {
+        final Page<RecipeDto> page = facade.findAll(pageable);
+        return ResponseEntity.ok(page);
     }
 }

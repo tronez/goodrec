@@ -1,0 +1,58 @@
+[
+  {
+    "_class": "com.goodrec.recipe.domain.Category",
+    "name" : "POLISH"
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Category",
+    "name" : "ITALIAN"
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Category",
+    "name" : "FRENCH"
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Category",
+    "name" : "SPANISH"
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Category",
+    "name" : "ENGLISH"
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Category",
+    "name" : "GREEK"
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Category",
+    "name" : "INDIAN"
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Category",
+    "name" : "CHINESE"
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Category",
+    "name" : "JAPANESE"
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Category",
+    "name" : "KOREAN"
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Category",
+    "name" : "MEXICAN"
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Category",
+    "name" : "VIETNAMESE"
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Category",
+    "name" : "AMERICAN"
+  },
+  {
+    "_class": "com.goodrec.recipe.domain.Category",
+    "name" : "THAI"
+  }
+]

@@ -4,6 +4,8 @@ import com.goodrec.recipe.dto.CategoryDto;
 import com.goodrec.recipe.dto.NewRecipeRequest;
 import com.goodrec.recipe.dto.RecipeDto;
 import com.goodrec.security.TokenProvider;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,8 +45,12 @@ public class RecipeFacade {
         final UUID userUUID = tokenProvider.getUserUUIDFromToken(token);
         final RecipeDto recipeToDelete = getRecipeByUUID(recipeUUID);
 
-        if(recipeToDelete.getUserUuid().equals(userUUID)){
+        if (recipeToDelete.getUserUuid().equals(userUUID)) {
             recipeService.deleteByUUID(recipeUUID);
         }
+    }
+
+    public Page<RecipeDto> findAll(Pageable pageable) {
+        return recipeService.findAll(pageable);
     }
 }
