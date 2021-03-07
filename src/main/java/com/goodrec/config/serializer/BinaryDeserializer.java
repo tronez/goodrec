@@ -12,7 +12,7 @@ import java.io.IOException;
 public class BinaryDeserializer extends JsonDeserializer<Binary> {
 
     @Override
-    public Binary deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public Binary deserialize(JsonParser p, DeserializationContext ctxt) throws IOException{
         final JsonNode node = p.getCodec().readTree(p);
         final JsonNode dataNode = node.get("data");
 

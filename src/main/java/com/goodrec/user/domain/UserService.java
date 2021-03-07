@@ -1,5 +1,6 @@
 package com.goodrec.user.domain;
 
+import com.goodrec.config.logging.Log;
 import com.goodrec.exception.BadRequestException;
 import com.goodrec.exception.ResourceNotFoundException;
 import com.goodrec.user.dto.RegisterRequest;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
+@Log
 public class UserService {
 
     private final PasswordEncoder passwordEncoder;

@@ -1,5 +1,6 @@
 package com.goodrec.recipe.domain;
 
+import com.goodrec.config.logging.Log;
 import com.goodrec.recipe.dto.CategoryDto;
 import com.goodrec.recipe.dto.NewRecipeRequest;
 import com.goodrec.recipe.dto.RecipeDto;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Log
 public class RecipeFacade {
 
     private final RecipeService recipeService;
