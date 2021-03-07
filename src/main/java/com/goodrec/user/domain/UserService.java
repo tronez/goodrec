@@ -38,7 +38,7 @@ public class UserService {
         return repository
                 .findById(uuid)
                 .map(User::toUserResponse)
-                .orElseThrow(() -> new ResourceNotFoundException("User was not found."));
+                .orElseThrow(() -> new ResourceNotFoundException(User.class, uuid));
     }
 
     public UserResponse findByEmail(String email) {
@@ -46,6 +46,6 @@ public class UserService {
         return repository
                 .findByEmail(email)
                 .map(User::toUserResponse)
-                .orElseThrow(() -> new ResourceNotFoundException("User was not found."));
+                .orElseThrow(() -> new ResourceNotFoundException(User.class, email));
     }
 }

@@ -15,6 +15,10 @@ public class UserCreator {
         return new RegisterRequest("invalid", "1");
     }
 
+    public static RegisterRequest create(String email, String password) {
+        return new RegisterRequest(email, password);
+    }
+
     public static UserResponse createResponseFrom(RegisterRequest request) {
         return new UserResponse(UUID.randomUUID(), request.getEmail(), request.getPassword());
     }

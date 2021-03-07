@@ -1,12 +1,12 @@
 package com.goodrec.recipe.domain;
 
-import com.goodrec.testdata.RecipeCreator;
-import com.goodrec.testdata.TokenCreator;
-import com.goodrec.testdata.PrincipalCreator;
 import com.goodrec.exception.ResourceNotFoundException;
 import com.goodrec.recipe.dto.NewRecipeRequest;
 import com.goodrec.recipe.dto.RecipeDto;
 import com.goodrec.security.TokenProvider;
+import com.goodrec.testdata.PrincipalCreator;
+import com.goodrec.testdata.RecipeCreator;
+import com.goodrec.testdata.TokenCreator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RecipeFacadeTest {
 
-    private static final String RESOURCE_NOT_FOUND_MESSAGE = "Recipe was not found";
     private RecipeService recipeService = new RecipeService(new InMemoryRecipeRepository());
     private CategoryService categoryService = new CategoryService(new InMemoryCategoryRepository());
     private TokenProvider tokenProvider = new TokenCreator();
@@ -38,24 +37,22 @@ class RecipeFacadeTest {
     @Test
     @DisplayName("Should add a recipe and return correct DTO")
     void shouldAddRecipe() throws IOException {
-//        given
         String token = tokenProvider.createToken(PrincipalCreator.createSimplePrincipal());
         NewRecipeRequest expectedRecipe = RecipeCreator.createNewRequest();
-//        when
+
         RecipeDto actualRecipe = cut.createRecipe(image, expectedRecipe, token);
-//        then
+
         assertEqualRecipe(expectedRecipe, actualRecipe);
     }
 
     @Test
     @DisplayName("Should add a recipe with doubled categories and save only one")
     void shouldAddRecipeWithDoubledCategories() throws IOException {
-//        given
         String token = tokenProvider.createToken(PrincipalCreator.createSimplePrincipal());
         NewRecipeRequest expectedRecipe = RecipeCreator.createWithDoubledCategories();
-//        when
+
         RecipeDto actualRecipe = cut.createRecipe(image, expectedRecipe, token);
-//        then
+
         assertEquals(1, actualRecipe.getCategories().size());
         assertEqualRecipe(expectedRecipe, actualRecipe);
     }
@@ -63,64 +60,62 @@ class RecipeFacadeTest {
     @Test
     @DisplayName("Should get recipe by uuid and return correct recipe DTO")
     void shouldGetRecipeByUUIDAndReturnCorrectDto() {
-//        given
         String token = tokenProvider.createToken(PrincipalCreator.createSimplePrincipal());
         NewRecipeRequest request = RecipeCreator.createNewRequest();
         RecipeDto expectedRecipe = cut.createRecipe(image, request, token);
-//        when
+
         RecipeDto actualRecipe = cut.getRecipeByUUID(expectedRecipe.getUuid());
-//        then
+
         assertEquals(expectedRecipe, actualRecipe);
     }
 
     @Test
     @DisplayName("Should throw ResourceNotFoundException when fetching non existing recipe")
     void shouldThrowExceptionWhenFetchingNonExistingRecipe() {
-//        given
-        UUID uuid = UUID.randomUUID();
-//        when
+        var uuid = UUID.randomUUID();
+
         var exception = assertThrows(ResourceNotFoundException.class,
                 () -> cut.getRecipeByUUID(uuid));
-//        then
-        assertEquals(RESOURCE_NOT_FOUND_MESSAGE, exception.getMessage());
+
+        var expectedMessage = String.format("Resource Recipe with uuid %s was not found", uuid);
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
     @DisplayName("Should delete recipe on correct uuid and if recipe belongs to user")
     void shouldDeleteRecipe() {
-//        given
+        var request = RecipeCreator.createNewRequest();
         String token = tokenProvider.createToken(PrincipalCreator.createSimplePrincipal());
-        NewRecipeRequest request = RecipeCreator.createNewRequest();
         RecipeDto savedRecipe = cut.createRecipe(image, request, token);
-//        when
+
         cut.deleteRecipe(savedRecipe.getUuid(), token);
-//        then
-        assertThrows(ResourceNotFoundException.class, () -> cut.getRecipeByUUID(savedRecipe.getUuid()));
+
+        var expectedUuid = savedRecipe.getUuid();
+        assertThrows(ResourceNotFoundException.class, () -> cut.getRecipeByUUID(expectedUuid));
     }
 
     @Test
     @DisplayName("Should throw ResourceNotFoundException when deleting non existing recipe")
     void shouldThrowExceptionWhenDeletingNonExistingRecipe() {
-//        given
-        UUID uuid = UUID.randomUUID();
-//        when
+        var uuid = UUID.randomUUID();
+
         var resourceNotFoundException = assertThrows(ResourceNotFoundException.class,
                 () -> cut.getRecipeByUUID(uuid));
-//        then
-        assertEquals(RESOURCE_NOT_FOUND_MESSAGE, resourceNotFoundException.getMessage());
+
+        var expectedMessage = String.format("Resource Recipe with uuid %s was not found", uuid);
+        assertEquals(expectedMessage, resourceNotFoundException.getMessage());
     }
 
     @Test
     @DisplayName("Should not delete other user recipe")
     void shouldNotDeleteRecipeWhenRecipeDontBelongToUser() {
-//        given
+        var request = RecipeCreator.createNewRequest();
         String token = tokenProvider.createToken(PrincipalCreator.createSimplePrincipal());
-        NewRecipeRequest request = RecipeCreator.createNewRequest();
         RecipeDto expectedRecipe = cut.createRecipe(image, request, token);
         String otherUserToken = tokenProvider.createToken(PrincipalCreator.createFrom("mail@op.pl", "12345"));
-//        when
+
         cut.deleteRecipe(expectedRecipe.getUuid(), otherUserToken);
-//        then
+
         var actualRecipe = assertDoesNotThrow(() -> cut.getRecipeByUUID(expectedRecipe.getUuid()));
         assertEquals(expectedRecipe, actualRecipe);
     }

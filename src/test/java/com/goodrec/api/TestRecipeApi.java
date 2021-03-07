@@ -109,9 +109,10 @@ class TestRecipeApi {
     @Test
     @DisplayName("Should return 200 status and matching recipe when fetching recipe")
     void testGetSuccess() throws Exception {
-        var expected = recipeTestDataFactory.createSimpleRecipe(token);
+        RecipeDto expected = recipeTestDataFactory.createSimpleRecipe(token);
+        var uuid = expected.getUuid();
 
-        MvcResult result = mockMvc.perform(get("/api/recipes/" + expected.getUuid()))
+        MvcResult result = mockMvc.perform(get("/api/recipes/{uuid}", uuid))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -122,10 +123,10 @@ class TestRecipeApi {
     @Test
     @DisplayName("Should return 404 status and proper error message when fetching non existing recipe")
     void testGetNotFound() throws Exception {
-        String expectedMessage = "Resource Recipe with uuid 1bb7aa99-d5cf-49b2-b087-2a080ae6171a was not found";
         var uuid = UUID.fromString("1bb7aa99-d5cf-49b2-b087-2a080ae6171a");
 
-        mockMvc.perform(get("/api/recipes/" + uuid))
+        var expectedMessage = String.format("Resource Recipe with uuid %s was not found", uuid);
+        mockMvc.perform(get("/api/recipes/{uuid}", uuid))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(containsString(expectedMessage)));
     }
@@ -140,13 +141,14 @@ class TestRecipeApi {
     @Test
     @DisplayName("Should return 204 status when deleting recipe")
     void testDeleteSuccess() throws Exception {
-        var recipe = recipeTestDataFactory.createSimpleRecipe(token);
+        RecipeDto recipe = recipeTestDataFactory.createSimpleRecipe(token);
+        var uuid = recipe.getUuid();
 
-        mockMvc.perform(delete("/api/recipes/" + recipe.getUuid())
+        mockMvc.perform(delete("/api/recipes/{uuid}", uuid)
                 .header(HEADER_STRING, TOKEN_PREFIX + token))
                 .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/api/recipes/" + recipe.getUuid()))
+        mockMvc.perform(get("/api/recipes/{uuid}", uuid))
                 .andExpect(status().isNotFound());
     }
 
@@ -154,9 +156,9 @@ class TestRecipeApi {
     @DisplayName("Should return 404 status and proper error message when deleting non existing recipe")
     void testDeleteNotFound() throws Exception {
         var uuid = UUID.fromString("1aa7bb99-d5cf-49b2-b087-2a080ea6171a");
-        var expectedMessage = "Resource Recipe with uuid 1aa7bb99-d5cf-49b2-b087-2a080ea6171a was not found";
 
-        mockMvc.perform(delete("/api/recipes/" + uuid)
+        var expectedMessage = String.format("Resource Recipe with uuid %s was not found", uuid);
+        mockMvc.perform(delete("/api/recipes/{uuid}", uuid)
                 .header(HEADER_STRING, TOKEN_PREFIX + token))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(containsString(expectedMessage)));

@@ -16,7 +16,7 @@ public class ResourceNotFoundException extends RuntimeException {
         super(String.format("Resource %s with uuid %s was not found", clazz.getSimpleName(), uuid.toString()));
     }
 
-    public ResourceNotFoundException(Class<?> clazz, String uuid) {
-        super(String.format("Resource %s with uuid %s was not found", clazz.getSimpleName(), uuid));
+    public ResourceNotFoundException(Class<?> clazz, String identifier) {
+        super(String.format("Resource %s with identifier %s was not found", clazz.getSimpleName(), identifier));
     }
 }
