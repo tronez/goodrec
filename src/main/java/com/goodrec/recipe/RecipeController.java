@@ -3,14 +3,17 @@ package com.goodrec.recipe;
 import com.goodrec.recipe.domain.RecipeFacade;
 import com.goodrec.recipe.dto.NewRecipeRequest;
 import com.goodrec.recipe.dto.RecipeDto;
+import com.goodrec.recipe.dto.UpdateRecipeRequest;
 import com.goodrec.security.TokenProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -76,5 +79,16 @@ public class RecipeController {
     public ResponseEntity<Page<RecipeDto>> findAll(Pageable pageable) {
         final Page<RecipeDto> page = facade.findAll(pageable);
         return ResponseEntity.ok(page);
+    }
+
+    @PatchMapping("/{uuid}")
+    public ResponseEntity<RecipeDto> update(@PathVariable UUID uuid,
+                                            @RequestBody @Valid UpdateRecipeRequest request,
+                                            @RequestHeader(HEADER_STRING) String header) {
+
+        final String token = tokenProvider.getJwtFromHeader(header);
+        final RecipeDto updatedRecipe = facade.update(uuid, request, token);
+
+        return ResponseEntity.ok(updatedRecipe);
     }
 }

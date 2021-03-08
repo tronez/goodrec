@@ -57,6 +57,25 @@ public class RecipeDto {
         );
     }
 
+    public static RecipeDto createFrom(UUID recipeUUID, UUID userUUID, UpdateRecipeRequest updatedRecipe,
+                                       Binary imageBase64) {
+
+        return new RecipeDto(recipeUUID,
+                userUUID,
+                updatedRecipe.getName(),
+                updatedRecipe.getCookingTime(),
+                updatedRecipe.getServings(),
+                updatedRecipe.getDirections(),
+                updatedRecipe.getDifficulty(),
+                imageBase64,
+                updatedRecipe.getIngredientList(),
+                updatedRecipe.getCategories());
+    }
+
+    public boolean belongsToUser(UUID userUuid) {
+        return this.userUuid.equals(userUuid);
+    }
+
     public UUID getUuid() {
         return uuid;
     }

@@ -4,10 +4,14 @@ import com.goodrec.recipe.domain.CategoryEnum;
 import com.goodrec.recipe.domain.Difficulty;
 import com.goodrec.recipe.domain.Unit;
 import com.goodrec.recipe.dto.CategoryDto;
+import com.goodrec.recipe.dto.IngredientDto;
 import com.goodrec.recipe.dto.NewIngredientRequest;
 import com.goodrec.recipe.dto.NewRecipeRequest;
+import com.goodrec.recipe.dto.RecipeDto;
+import com.goodrec.recipe.dto.UpdateRecipeRequest;
 
 import java.util.List;
+import java.util.UUID;
 
 public class RecipeCreator {
 
@@ -42,5 +46,29 @@ public class RecipeCreator {
 
     public static NewRecipeRequest createBadRequest() {
         return new NewRecipeRequest();
+    }
+
+    public static UpdateRecipeRequest createUpdated() {
+        var updatedRecipe = new UpdateRecipeRequest();
+        var updatedIngredient = new IngredientDto(UUID.randomUUID(), "Updated ingredient", 10.0, Unit.CUP);
+
+        var category = new CategoryDto(CategoryEnum.ENGLISH);
+
+        updatedRecipe
+                .setName("updated name")
+                .setCookingTime(666)
+                .setServings(999)
+                .setDirections("Updated directions")
+                .setDifficulty(Difficulty.EASY)
+                .setIngredientList(List.of(updatedIngredient))
+                .setCategories(List.of(category));
+
+        return updatedRecipe;
+    }
+
+    public static UpdateRecipeRequest createInvalid() {
+        return new UpdateRecipeRequest()
+                .setName("")
+                .setDirections("");
     }
 }

@@ -1,5 +1,6 @@
 package com.goodrec.recipe.domain;
 
+import com.goodrec.config.logging.Log;
 import com.goodrec.recipe.dto.CategoryDto;
 import org.springframework.stereotype.Service;
 
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Log
 class CategoryService {
 
     private final CategoryRepository repository;

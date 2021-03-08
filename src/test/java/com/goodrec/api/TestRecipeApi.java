@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,6 +30,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -162,5 +165,56 @@ class TestRecipeApi {
                 .header(HEADER_STRING, TOKEN_PREFIX + token))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(containsString(expectedMessage)));
+    }
+
+    @Test
+    @DisplayName("Should return 200 status when updating existing recipe")
+    void testUpdateSuccess() throws Exception {
+        RecipeDto recipe = recipeTestDataFactory.createSimpleRecipe(token);
+        var uuid = recipe.getUuid();
+        var updatedRecipe = RecipeCreator.createUpdated();
+
+        MvcResult updateResult = mockMvc.perform(patch("/api/recipes/{uuid}", uuid)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(updatedRecipe))
+                .header(HEADER_STRING, TOKEN_PREFIX + token))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        MvcResult getResult = mockMvc
+                .perform(get("/api/recipes/{uuid}", uuid))
+                .andReturn();
+        var expectedJson = updateResult.getResponse().getContentAsString();
+        var actualJson = getResult.getResponse().getContentAsString();
+        assertEquals(expectedJson, actualJson, "Update was not applied. Json content should be equal");
+    }
+
+    @Test
+    void testUpdateBadRequestInvalidResource() throws Exception {
+        RecipeDto recipe = recipeTestDataFactory.createSimpleRecipe(token);
+        var uuid = recipe.getUuid();
+        var invalidRecipe = RecipeCreator.createInvalid();
+
+        mockMvc.perform(patch("/api/recipes/{uuid}", uuid)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(invalidRecipe))
+                .header(HEADER_STRING, TOKEN_PREFIX + token))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("Method argument validation failed")));
+    }
+
+    @Test
+    void testUpdateBadRequestRecipeNotFound() throws Exception {
+        var uuid = UUID.fromString("1bb7aa99-d5cf-49b2-b087-2a080ae6171a");
+        var updatedRecipe = RecipeCreator.createUpdated();
+
+        var expectedMessage = String.format("Resource Recipe with uuid %s was not found", uuid);
+        mockMvc.perform(patch("/api/recipes/{uuid}", uuid)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(updatedRecipe))
+                .header(HEADER_STRING, TOKEN_PREFIX + token))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString(expectedMessage)))
+                .andDo(print());
     }
 }

@@ -120,6 +120,50 @@ class RecipeFacadeTest {
         assertEquals(expectedRecipe, actualRecipe);
     }
 
+    @Test
+    @DisplayName("Should return updated recipe dto when updating recipe")
+    void shouldUpdateRecipe() {
+        String token = tokenProvider.createToken(PrincipalCreator.createSimplePrincipal());
+        RecipeDto savedRecipe = cut.createRecipe(image, RecipeCreator.createNewRequest(), token);
+        var recipeUUID = savedRecipe.getUuid();
+        var recipeToUpdate = RecipeCreator.createUpdated();
+
+        RecipeDto updatedRecipe = cut.update(recipeUUID, recipeToUpdate, token);
+
+        assertEquals(recipeToUpdate.getName(), updatedRecipe.getName(),
+                "Names should be equal. Update was not applied");
+    }
+
+    @Test
+    @DisplayName("Should throw ResourceNotFound when updating non existing recipe")
+    void shouldThrowWhenUpdatingNonExistingRecipe() {
+        String token = tokenProvider.createToken(PrincipalCreator.createSimplePrincipal());
+        var recipeToUpdate = RecipeCreator.createUpdated();
+        var recipeUUID = UUID.fromString("1bb7aa99-d5cf-49b2-b087-2a080ae6171a");
+
+        var resourceNotFoundException = assertThrows(ResourceNotFoundException.class,
+                () -> cut.update(recipeUUID, recipeToUpdate, token));
+
+        var expectedMessage = String.format("Resource Recipe with uuid %s was not found", recipeUUID);
+        assertEquals(expectedMessage, resourceNotFoundException.getMessage(), "Wrong exception was thrown");
+    }
+
+    @Test
+    @DisplayName("Should throw ResourceNotFound when updating other user's recipe")
+    void shouldThrowWhenUpdatingOtherUserRecipe() {
+        String otherUserToken = tokenProvider.createToken(PrincipalCreator.createSimplePrincipal());
+        RecipeDto savedRecipe = cut.createRecipe(image, RecipeCreator.createNewRequest(), otherUserToken);
+        var recipeUUID = savedRecipe.getUuid();
+        var recipeToUpdate = RecipeCreator.createUpdated();
+        String token = tokenProvider.createToken(PrincipalCreator.createFrom("user@gmail.com", "1234"));
+
+        var resourceNotFoundException = assertThrows(ResourceNotFoundException.class,
+                () -> cut.update(recipeUUID, recipeToUpdate, token));
+
+        var expectedMessage = String.format("Resource Recipe with uuid %s was not found", recipeUUID);
+        assertEquals(expectedMessage, resourceNotFoundException.getMessage(), "Wrong exception was thrown");
+    }
+
     void assertEqualRecipe(NewRecipeRequest expected, RecipeDto actual) {
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getDirections(), actual.getDirections());

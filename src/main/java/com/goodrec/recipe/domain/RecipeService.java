@@ -1,5 +1,6 @@
 package com.goodrec.recipe.domain;
 
+import com.goodrec.config.logging.Log;
 import com.goodrec.exception.ResourceNotFoundException;
 import com.goodrec.recipe.dto.RecipeDto;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
+@Log
 class RecipeService {
 
     private final RecipeRepository recipeRepository;

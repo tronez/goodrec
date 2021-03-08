@@ -27,18 +27,19 @@ class LoggingAspect {
     }
 
     private void log(ProceedingJoinPoint joinPoint, StopWatch stopWatch, Object result) {
-        String methodName = getMethodName(joinPoint);
+        String operationString = getOperationString(joinPoint);
         String timerString = createTimerString(stopWatch);
         String resultString = createResultString(result);
 
         Logger logger = LoggerFactory.getLogger(joinPoint.getSignature().getDeclaringType());
-        logger.info("{}{} {}", methodName, timerString, resultString);
+        logger.info("{}{} {}", operationString, timerString, resultString);
     }
 
-    private String getMethodName(ProceedingJoinPoint joinPoint) {
+    private String getOperationString(ProceedingJoinPoint joinPoint) {
         String classWithPackageName = joinPoint.getSignature().getDeclaringTypeName();
         String className = classWithPackageName.substring(classWithPackageName.lastIndexOf('.') + 1);
-        return className + "." + joinPoint.getSignature().getName();
+        String methodName = joinPoint.getSignature().getName();
+        return className + "." + methodName;
     }
 
     private String createTimerString(StopWatch stopWatch) {

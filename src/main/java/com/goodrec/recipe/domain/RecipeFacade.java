@@ -1,9 +1,11 @@
 package com.goodrec.recipe.domain;
 
 import com.goodrec.config.logging.Log;
+import com.goodrec.exception.ResourceNotFoundException;
 import com.goodrec.recipe.dto.CategoryDto;
 import com.goodrec.recipe.dto.NewRecipeRequest;
 import com.goodrec.recipe.dto.RecipeDto;
+import com.goodrec.recipe.dto.UpdateRecipeRequest;
 import com.goodrec.security.TokenProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,12 +49,24 @@ public class RecipeFacade {
         final UUID userUUID = tokenProvider.getUserUUIDFromToken(token);
         final RecipeDto recipeToDelete = getRecipeByUUID(recipeUUID);
 
-        if (recipeToDelete.getUserUuid().equals(userUUID)) {
+        if (recipeToDelete.belongsToUser(userUUID)) {
             recipeService.deleteByUUID(recipeUUID);
         }
     }
 
     public Page<RecipeDto> findAll(Pageable pageable) {
         return recipeService.findAll(pageable);
+    }
+
+    public RecipeDto update(UUID recipeUUID, UpdateRecipeRequest updatedRecipe, String token) {
+        final UUID userUUID = tokenProvider.getUserUUIDFromToken(token);
+        final RecipeDto existingRecipe = getRecipeByUUID(recipeUUID);
+
+        if (existingRecipe.belongsToUser(userUUID)) {
+            var recipe = RecipeDto.createFrom(recipeUUID, userUUID, updatedRecipe, existingRecipe.getImageBase64());
+            return recipeService.saveRecipe(recipe);
+        }
+
+        throw new ResourceNotFoundException(Recipe.class, recipeUUID);
     }
 }
