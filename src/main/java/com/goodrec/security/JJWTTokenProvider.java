@@ -9,6 +9,8 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -19,6 +21,8 @@ import static com.goodrec.security.JwtConstants.TOKEN_PREFIX;
 
 @Service
 public class JJWTTokenProvider implements TokenProvider {
+
+    private static final Logger log = LoggerFactory.getLogger(JJWTTokenProvider.class);
 
     private final ApplicationProperties appProperties;
 
@@ -71,15 +75,15 @@ public class JJWTTokenProvider implements TokenProvider {
 
             return true;
         } catch (SignatureException ex) {
-            System.err.println("Invalid JWT signature");
+            log.error("Invalid JWT signature");
         } catch (MalformedJwtException ex) {
-            System.err.println("Invalid JWT token");
+            log.error("Invalid JWT token");
         } catch (ExpiredJwtException ex) {
-            System.err.println("Expired JWT token");
+            log.error("Expired JWT token");
         } catch (UnsupportedJwtException ex) {
-            System.err.println("Unsupported JWT token");
+            log.error("Unsupported JWT token");
         } catch (IllegalArgumentException ex) {
-            System.err.println("JWT claims string is empty.");
+            log.error("JWT claims string is empty.");
         }
 
         return false;

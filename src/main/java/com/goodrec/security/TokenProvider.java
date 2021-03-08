@@ -1,7 +1,6 @@
 package com.goodrec.security;
 
 import com.goodrec.user.domain.UserPrincipal;
-import org.springframework.security.core.Authentication;
 
 import java.util.UUID;
 

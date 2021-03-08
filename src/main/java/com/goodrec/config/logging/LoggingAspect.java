@@ -13,6 +13,7 @@ class LoggingAspect {
 
     @Pointcut("@within(com.goodrec.config.logging.Log)")
     void logAnnotation() {
+//        pointcut for all classes implementing @Log annotation
     }
 
     @Around("logAnnotation()")

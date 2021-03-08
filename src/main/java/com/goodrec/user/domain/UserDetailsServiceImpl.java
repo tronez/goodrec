@@ -16,14 +16,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserPrincipal loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserPrincipal loadUserByUsername(String username) {
         return userRepository
                 .findByEmail(username)
                 .map(UserPrincipal::createFrom)
                 .orElseThrow(() -> new UsernameNotFoundException("User was not found: " + username));
     }
 
-    public UserPrincipal loadUserByUUID(UUID uuid){
+    public UserPrincipal loadUserByUUID(UUID uuid) {
         return userRepository
                 .findById(uuid)
                 .map(UserPrincipal::createFrom)

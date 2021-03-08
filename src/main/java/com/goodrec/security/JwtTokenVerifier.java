@@ -2,6 +2,8 @@ package com.goodrec.security;
 
 import com.goodrec.user.domain.UserDetailsServiceImpl;
 import com.goodrec.user.domain.UserPrincipal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +20,8 @@ import java.util.UUID;
 import static com.goodrec.security.JwtConstants.HEADER_STRING;
 
 public class JwtTokenVerifier extends OncePerRequestFilter {
+
+    private static final Logger log = LoggerFactory.getLogger(JwtTokenVerifier.class);
 
     private final TokenProvider tokenProvider;
     private final UserDetailsServiceImpl userDetailsService;
@@ -50,7 +54,7 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         } catch (Exception e) {
-            System.err.println("Could not set user authentication in security context");
+            log.error("Could not set user authentication in security context");
         }
         filterChain.doFilter(request, response);
     }
