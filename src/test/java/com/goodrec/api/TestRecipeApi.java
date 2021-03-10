@@ -24,14 +24,15 @@ import java.util.UUID;
 
 import static com.goodrec.security.JwtConstants.HEADER_STRING;
 import static com.goodrec.security.JwtConstants.TOKEN_PREFIX;
+import static java.lang.String.format;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -78,7 +79,7 @@ class TestRecipeApi {
     @DisplayName("Should return 201 status with location header when creating a recipe")
     void testCreateSuccess() throws Exception {
         var recipeRequest = RecipeCreator.createNewRequest();
-        var requestMultipart = new MockMultipartFile("request", "request", "application/json",
+        var requestMultipart = new MockMultipartFile("request", "request", MediaType.APPLICATION_JSON_VALUE,
                 mapper.writeValueAsBytes(recipeRequest));
 
         MvcResult result = mockMvc.perform(multipart("/api/recipes")
@@ -98,7 +99,7 @@ class TestRecipeApi {
     @DisplayName("Should return 400 status with proper error message when creating recipe with invalid request")
     void testCreateFail() throws Exception {
         var recipeRequest = RecipeCreator.createBadRequest();
-        var requestMultipart = new MockMultipartFile("request", "request", "application/json",
+        var requestMultipart = new MockMultipartFile("request", "request", MediaType.APPLICATION_JSON_VALUE,
                 mapper.writeValueAsBytes(recipeRequest));
 
         mockMvc.perform(multipart("/api/recipes")
@@ -128,7 +129,7 @@ class TestRecipeApi {
     void testGetNotFound() throws Exception {
         var uuid = UUID.fromString("1bb7aa99-d5cf-49b2-b087-2a080ae6171a");
 
-        var expectedMessage = String.format("Resource Recipe with uuid %s was not found", uuid);
+        var expectedMessage = format("Resource Recipe with uuid %s was not found", uuid);
         mockMvc.perform(get("/api/recipes/{uuid}", uuid))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(containsString(expectedMessage)));
@@ -160,7 +161,7 @@ class TestRecipeApi {
     void testDeleteNotFound() throws Exception {
         var uuid = UUID.fromString("1aa7bb99-d5cf-49b2-b087-2a080ea6171a");
 
-        var expectedMessage = String.format("Resource Recipe with uuid %s was not found", uuid);
+        var expectedMessage = format("Resource Recipe with uuid %s was not found", uuid);
         mockMvc.perform(delete("/api/recipes/{uuid}", uuid)
                 .header(HEADER_STRING, TOKEN_PREFIX + token))
                 .andExpect(status().isNotFound())
@@ -190,6 +191,7 @@ class TestRecipeApi {
     }
 
     @Test
+    @DisplayName("Should return 400 when updating recipe with invalid data")
     void testUpdateBadRequestInvalidResource() throws Exception {
         RecipeDto recipe = recipeTestDataFactory.createSimpleRecipe(token);
         var uuid = recipe.getUuid();
@@ -204,17 +206,59 @@ class TestRecipeApi {
     }
 
     @Test
-    void testUpdateBadRequestRecipeNotFound() throws Exception {
+    @DisplayName("Should return 404 when updating non existing recipe")
+    void testUpdateNotFoundRecipeNotFound() throws Exception {
         var uuid = UUID.fromString("1bb7aa99-d5cf-49b2-b087-2a080ae6171a");
         var updatedRecipe = RecipeCreator.createUpdated();
 
-        var expectedMessage = String.format("Resource Recipe with uuid %s was not found", uuid);
+        var expectedMessage = format("Resource Recipe with uuid %s was not found", uuid);
         mockMvc.perform(patch("/api/recipes/{uuid}", uuid)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(updatedRecipe))
                 .header(HEADER_STRING, TOKEN_PREFIX + token))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string(containsString(expectedMessage)))
-                .andDo(print());
+                .andExpect(content().string(containsString(expectedMessage)));
+    }
+
+    @Test
+    @DisplayName("Should return 200 when updating recipe's image")
+    void testUpdateImageSuccess() throws Exception {
+        RecipeDto recipeInSystem = recipeTestDataFactory.createSimpleRecipe(token);
+        var uuid = recipeInSystem.getUuid();
+        var updatedImage = new MockMultipartFile("file", "updatedImage".getBytes());
+
+        MvcResult result = mockMvc.perform(multipart("/api/recipes/{uuid}/images", uuid)
+                .file(updatedImage)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .header(HEADER_STRING, TOKEN_PREFIX + token)
+                .with(request -> {
+                    request.setMethod("PATCH");
+                    return request;
+                }))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var actualRecipe = mapper.readValue(result.getResponse().getContentAsString(), RecipeDto.class);
+        assertArrayEquals(updatedImage.getBytes(), actualRecipe.getImageBase64().getData(),
+                "images should be equal. Image update was not applied");
+    }
+
+    @Test
+    @DisplayName("Should return 404 when updating non existing recipe")
+    void testUpdateImageNotFound() throws Exception {
+        var uuid = UUID.fromString("1bb7aa99-d5cf-49b2-b087-2a080ae6171a");
+        var updatedImage = new MockMultipartFile("file", "updatedImage".getBytes());
+
+        var expectedMessage = format("Resource Recipe with uuid %s was not found", uuid);
+        mockMvc.perform(multipart("/api/recipes/{uuid}/images", uuid)
+                .file(updatedImage)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .header(HEADER_STRING, TOKEN_PREFIX + token)
+                .with(request -> {
+                    request.setMethod("PATCH");
+                    return request;
+                }))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString(expectedMessage)));
     }
 }

@@ -3,6 +3,7 @@ package com.goodrec.recipe.domain;
 import com.goodrec.config.logging.Log;
 import com.goodrec.exception.ResourceNotFoundException;
 import com.goodrec.recipe.dto.RecipeDto;
+import org.bson.types.Binary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,5 +44,16 @@ class RecipeService {
         return recipeRepository
                 .findAll(pageable)
                 .map(Recipe::toDto);
+    }
+
+    public RecipeDto updateImage(RecipeDto recipeDto, byte[] imageBytes) {
+
+        final Binary image = new Binary(imageBytes);
+        Recipe recipe = Recipe.createFrom(recipeDto);
+        recipe.setImage(image);
+
+        return recipeRepository
+                .save(recipe)
+                .toDto();
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -88,6 +89,17 @@ public class RecipeController {
 
         final String token = tokenProvider.getJwtFromHeader(header);
         final RecipeDto updatedRecipe = facade.update(uuid, request, token);
+
+        return ResponseEntity.ok(updatedRecipe);
+    }
+
+    @PatchMapping(value = "/{uuid}/images", consumes = {"multipart/form-data"})
+    public ResponseEntity<RecipeDto> updateImage(@PathVariable UUID uuid,
+                                         @RequestParam MultipartFile file,
+                                         @RequestHeader(HEADER_STRING) String header) {
+
+        final String token = tokenProvider.getJwtFromHeader(header);
+        final RecipeDto updatedRecipe = facade.updateRecipeImage(uuid, file, token);
 
         return ResponseEntity.ok(updatedRecipe);
     }

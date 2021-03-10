@@ -7,7 +7,6 @@ import com.goodrec.recipe.dto.CategoryDto;
 import com.goodrec.recipe.dto.IngredientDto;
 import com.goodrec.recipe.dto.NewIngredientRequest;
 import com.goodrec.recipe.dto.NewRecipeRequest;
-import com.goodrec.recipe.dto.RecipeDto;
 import com.goodrec.recipe.dto.UpdateRecipeRequest;
 
 import java.util.List;

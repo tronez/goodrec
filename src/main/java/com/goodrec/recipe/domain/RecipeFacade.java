@@ -69,4 +69,16 @@ public class RecipeFacade {
 
         throw new ResourceNotFoundException(Recipe.class, recipeUUID);
     }
+
+    public RecipeDto updateRecipeImage(UUID recipeUUID, MultipartFile file, String token) {
+        final UUID userUUID = tokenProvider.getUserUUIDFromToken(token);
+        final RecipeDto recipeDto = getRecipeByUUID(recipeUUID);
+
+        if (recipeDto.belongsToUser(userUUID)) {
+            final byte[] imageBytes = FileManager.getBytes(file);
+            return recipeService.updateImage(recipeDto, imageBytes);
+        }
+
+        throw new ResourceNotFoundException(Recipe.class, recipeUUID);
+    }
 }
