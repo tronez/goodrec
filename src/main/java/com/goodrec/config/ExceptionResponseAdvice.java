@@ -1,5 +1,6 @@
 package com.goodrec.config;
 
+import com.goodrec.exception.ImageExtensionNotSupportedException;
 import com.goodrec.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,22 +19,34 @@ class ExceptionResponseAdvice {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     ResponseEntity<ApiError<String>> handleResourceNotFoundException(ResourceNotFoundException e) {
+        final var exceptionMessage = new ApiError<>("Resource was not found", List.of(e.getMessage()));
+
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(new ApiError<>("Resource was not found", List.of(e.getMessage())));
+                .body(exceptionMessage);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    ResponseEntity<ApiError<Map<String, Set<String>>>> handleValidationException(MethodArgumentNotValidException exception) {
-        final List<FieldError> errorList = exception.getBindingResult().getFieldErrors();
+    ResponseEntity<ApiError<Map<String, Set<String>>>> handleValidationException(MethodArgumentNotValidException e) {
+        final List<FieldError> errorList = e.getBindingResult().getFieldErrors();
 
         final Map<String, Set<String>> errorMap = errorList.stream()
                 .collect(Collectors.groupingBy(FieldError::getField,
                         Collectors.mapping(FieldError::getDefaultMessage, Collectors.toSet())));
 
+        final var exceptionMessage = new ApiError<>("Method argument validation failed", List.of(errorMap));
         return ResponseEntity
                 .badRequest()
-                .body(new ApiError<>("Method argument validation failed", List.of(errorMap)));
+                .body(exceptionMessage);
+    }
+
+    @ExceptionHandler(ImageExtensionNotSupportedException.class)
+    ResponseEntity<ApiError<String>> handleImageExtensionNotSupported(ImageExtensionNotSupportedException e) {
+        final var exceptionMessage = new ApiError<>("Image extension not supported", List.of(e.getMessage()));
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exceptionMessage);
     }
 
     static class ApiError<T> {

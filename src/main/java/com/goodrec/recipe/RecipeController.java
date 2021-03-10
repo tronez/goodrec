@@ -1,5 +1,6 @@
 package com.goodrec.recipe;
 
+import com.goodrec.exception.ImageExtensionNotSupportedException;
 import com.goodrec.recipe.domain.RecipeFacade;
 import com.goodrec.recipe.dto.NewRecipeRequest;
 import com.goodrec.recipe.dto.RecipeDto;
@@ -27,6 +28,8 @@ import java.net.URI;
 import java.util.UUID;
 
 import static com.goodrec.security.JwtConstants.HEADER_STRING;
+import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
+import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 
 @RestController
 @RequestMapping("/api/recipes")
@@ -44,6 +47,11 @@ public class RecipeController {
     public ResponseEntity<RecipeDto> create(@RequestPart(value = "image") MultipartFile image,
                                             @RequestPart(value = "request") @Valid NewRecipeRequest request,
                                             @RequestHeader(HEADER_STRING) String header) {
+
+        String contentType = image.getContentType();
+        if (!isAcceptedImageFormat(contentType)) {
+            throw new ImageExtensionNotSupportedException(contentType);
+        }
 
         final String token = tokenProvider.getJwtFromHeader(header);
         final RecipeDto dto = facade.createRecipe(image, request, token);
@@ -95,12 +103,21 @@ public class RecipeController {
 
     @PatchMapping(value = "/{uuid}/images", consumes = {"multipart/form-data"})
     public ResponseEntity<RecipeDto> updateImage(@PathVariable UUID uuid,
-                                         @RequestParam MultipartFile file,
-                                         @RequestHeader(HEADER_STRING) String header) {
+                                                 @RequestParam MultipartFile image,
+                                                 @RequestHeader(HEADER_STRING) String header) {
+
+        String contentType = image.getContentType();
+        if (!isAcceptedImageFormat(contentType)) {
+            throw new ImageExtensionNotSupportedException(contentType);
+        }
 
         final String token = tokenProvider.getJwtFromHeader(header);
-        final RecipeDto updatedRecipe = facade.updateRecipeImage(uuid, file, token);
+        final RecipeDto updatedRecipe = facade.updateRecipeImage(uuid, image, token);
 
         return ResponseEntity.ok(updatedRecipe);
+    }
+
+    private boolean isAcceptedImageFormat(String contentType) {
+        return IMAGE_JPEG_VALUE.equals(contentType) || IMAGE_PNG_VALUE.equals(contentType);
     }
 }

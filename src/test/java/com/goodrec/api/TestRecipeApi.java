@@ -3,6 +3,7 @@ package com.goodrec.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goodrec.recipe.dto.RecipeDto;
 import com.goodrec.security.TokenProvider;
+import com.goodrec.testdata.MultipartFileCreator;
 import com.goodrec.testdata.PrincipalCreator;
 import com.goodrec.testdata.RecipeCreator;
 import com.goodrec.testdata.RecipeTestDataFactory;
@@ -14,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,9 +26,11 @@ import static com.goodrec.security.JwtConstants.HEADER_STRING;
 import static com.goodrec.security.JwtConstants.TOKEN_PREFIX;
 import static java.lang.String.format;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -42,13 +44,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithUserDetails("kamil@gmail.com")
 class TestRecipeApi {
 
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
-    private ObjectMapper mapper;
+    private final ObjectMapper mapper;
 
-    private TokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
 
-    private RecipeTestDataFactory recipeTestDataFactory;
+    private final RecipeTestDataFactory recipeTestDataFactory;
 
     @Autowired
     public TestRecipeApi(MockMvc mockMvc, ObjectMapper mapper, TokenProvider tokenProvider,
@@ -59,7 +61,7 @@ class TestRecipeApi {
         this.recipeTestDataFactory = recipeTestDataFactory;
     }
 
-    private MockMultipartFile imageMultipart = new MockMultipartFile("image", "base64".getBytes());
+    private static MockMultipartFile imageMultipart;
     private static UserPrincipal testPrincipal;
     private static String token;
 
@@ -68,6 +70,11 @@ class TestRecipeApi {
         testPrincipal = PrincipalCreator.principalOf(UUID.fromString("fcbaf08f-7c6c-454a-90f1-c204627ac49b"),
                 "kamil@gmail.com",
                 "kamil12345");
+
+        imageMultipart = MultipartFileCreator.fromFile(
+                "image",
+                IMAGE_JPEG_VALUE,
+                "src/test/resources/images/22996.jpg");
     }
 
     @BeforeEach
@@ -79,7 +86,9 @@ class TestRecipeApi {
     @DisplayName("Should return 201 status with location header when creating a recipe")
     void testCreateSuccess() throws Exception {
         var recipeRequest = RecipeCreator.createNewRequest();
-        var requestMultipart = new MockMultipartFile("request", "request", MediaType.APPLICATION_JSON_VALUE,
+        var requestMultipart = MultipartFileCreator.simpleFile(
+                "request",
+                APPLICATION_JSON_VALUE,
                 mapper.writeValueAsBytes(recipeRequest));
 
         MvcResult result = mockMvc.perform(multipart("/api/recipes")
@@ -91,15 +100,20 @@ class TestRecipeApi {
                 .andReturn();
 
         RecipeDto response = mapper.readValue(result.getResponse().getContentAsString(), RecipeDto.class);
-        assertNotNull(response.getUuid(), "Recipe id can't be null");
-        assertEquals(recipeRequest.getName(), response.getName(), "Recipe name update isn't applied");
+        assertAll(
+                () -> assertNotNull(response.getUuid(), "Recipe id can't be null"),
+                () -> assertEquals(recipeRequest.getName(), response.getName(), "Recipe name update isn't applied"),
+                () -> assertArrayEquals(imageMultipart.getBytes(), response.getImageBase64().getData())
+        );
     }
 
     @Test
     @DisplayName("Should return 400 status with proper error message when creating recipe with invalid request")
     void testCreateFail() throws Exception {
         var recipeRequest = RecipeCreator.createBadRequest();
-        var requestMultipart = new MockMultipartFile("request", "request", MediaType.APPLICATION_JSON_VALUE,
+        var requestMultipart = MultipartFileCreator.simpleFile(
+                "request",
+                APPLICATION_JSON_VALUE,
                 mapper.writeValueAsBytes(recipeRequest));
 
         mockMvc.perform(multipart("/api/recipes")
@@ -176,7 +190,7 @@ class TestRecipeApi {
         var updatedRecipe = RecipeCreator.createUpdated();
 
         MvcResult updateResult = mockMvc.perform(patch("/api/recipes/{uuid}", uuid)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(mapper.writeValueAsString(updatedRecipe))
                 .header(HEADER_STRING, TOKEN_PREFIX + token))
                 .andExpect(status().isOk())
@@ -198,7 +212,7 @@ class TestRecipeApi {
         var invalidRecipe = RecipeCreator.createInvalid();
 
         mockMvc.perform(patch("/api/recipes/{uuid}", uuid)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(mapper.writeValueAsString(invalidRecipe))
                 .header(HEADER_STRING, TOKEN_PREFIX + token))
                 .andExpect(status().isBadRequest())
@@ -213,7 +227,7 @@ class TestRecipeApi {
 
         var expectedMessage = format("Resource Recipe with uuid %s was not found", uuid);
         mockMvc.perform(patch("/api/recipes/{uuid}", uuid)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(mapper.writeValueAsString(updatedRecipe))
                 .header(HEADER_STRING, TOKEN_PREFIX + token))
                 .andExpect(status().isNotFound())
@@ -225,11 +239,14 @@ class TestRecipeApi {
     void testUpdateImageSuccess() throws Exception {
         RecipeDto recipeInSystem = recipeTestDataFactory.createSimpleRecipe(token);
         var uuid = recipeInSystem.getUuid();
-        var updatedImage = new MockMultipartFile("file", "updatedImage".getBytes());
+        var updatedImage = MultipartFileCreator.fromFile(
+                "image",
+                IMAGE_JPEG_VALUE,
+                "src/test/resources/images/orange.jpg");
 
         MvcResult result = mockMvc.perform(multipart("/api/recipes/{uuid}/images", uuid)
                 .file(updatedImage)
-                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .contentType(MULTIPART_FORM_DATA)
                 .header(HEADER_STRING, TOKEN_PREFIX + token)
                 .with(request -> {
                     request.setMethod("PATCH");
@@ -247,12 +264,15 @@ class TestRecipeApi {
     @DisplayName("Should return 404 when updating non existing recipe")
     void testUpdateImageNotFound() throws Exception {
         var uuid = UUID.fromString("1bb7aa99-d5cf-49b2-b087-2a080ae6171a");
-        var updatedImage = new MockMultipartFile("file", "updatedImage".getBytes());
+        var updatedImage = MultipartFileCreator.fromFile(
+                "image",
+                IMAGE_JPEG_VALUE,
+                "src/test/resources/images/orange.jpg");
 
         var expectedMessage = format("Resource Recipe with uuid %s was not found", uuid);
         mockMvc.perform(multipart("/api/recipes/{uuid}/images", uuid)
                 .file(updatedImage)
-                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .contentType(MULTIPART_FORM_DATA)
                 .header(HEADER_STRING, TOKEN_PREFIX + token)
                 .with(request -> {
                     request.setMethod("PATCH");
