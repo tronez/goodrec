@@ -38,11 +38,7 @@
     "directions": "string",
     "difficulty": "EASY",
     "image": {
-      "data": [
-        1,
-        2,
-        3
-      ]
+      "data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=="
     },
     "ingredientList": [
       {

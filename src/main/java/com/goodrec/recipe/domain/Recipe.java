@@ -29,7 +29,7 @@ class Recipe {
     private List<Category> categories;
     private Binary image;
 
-    public Recipe() {
+    Recipe() {
     }
 
     public Recipe(UUID id, UUID userId, String name, Integer cookingTime, Integer servings, String directions,
@@ -46,7 +46,7 @@ class Recipe {
         this.image = image;
     }
 
-    public static Recipe createFrom(RecipeDto request) {
+    static Recipe createFrom(RecipeDto request) {
         final List<Ingredient> ingredients = request.getIngredientList().stream()
                 .map(Ingredient::createFrom)
                 .collect(Collectors.toList());
@@ -65,7 +65,7 @@ class Recipe {
                 request.getDifficulty(),
                 ingredients,
                 categories,
-                request.getImageBase64());
+                new Binary(request.getImageBase64()));
     }
 
     RecipeDto toDto() {
@@ -85,97 +85,97 @@ class Recipe {
                 servings,
                 directions,
                 difficulty,
-                image,
+                image.getData(),
                 ingredientDtos,
                 categoryDtos);
     }
 
-    public UUID getId() {
+    UUID getId() {
         return id;
     }
 
-    public UUID getUserId() {
+    UUID getUserId() {
         return userId;
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public Integer getCookingTime() {
+    Integer getCookingTime() {
         return cookingTime;
     }
 
-    public Integer getServings() {
+    Integer getServings() {
         return servings;
     }
 
-    public String getDirections() {
+    String getDirections() {
         return directions;
     }
 
-    public Difficulty getDifficulty() {
+    Difficulty getDifficulty() {
         return difficulty;
     }
 
-    public Binary getImage() {
+    Binary getImage() {
         return image;
     }
 
-    public List<Ingredient> getIngredientList() {
+    List<Ingredient> getIngredientList() {
         return ingredientList;
     }
 
-    public List<Category> getCategories() {
+    List<Category> getCategories() {
         return categories;
     }
 
-    public Recipe setId(UUID id) {
+    Recipe setId(UUID id) {
         this.id = id;
         return this;
     }
 
-    public Recipe setUserId(UUID userId) {
+    Recipe setUserId(UUID userId) {
         this.userId = userId;
         return this;
     }
 
-    public Recipe setName(String name) {
+    Recipe setName(String name) {
         this.name = name;
         return this;
     }
 
-    public Recipe setCookingTime(Integer cookingTime) {
+    Recipe setCookingTime(Integer cookingTime) {
         this.cookingTime = cookingTime;
         return this;
     }
 
-    public Recipe setServings(Integer servings) {
+    Recipe setServings(Integer servings) {
         this.servings = servings;
         return this;
     }
 
-    public Recipe setDirections(String directions) {
+    Recipe setDirections(String directions) {
         this.directions = directions;
         return this;
     }
 
-    public Recipe setDifficulty(Difficulty difficulty) {
+    Recipe setDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
         return this;
     }
 
-    public Recipe setIngredientList(List<Ingredient> ingredientList) {
+    Recipe setIngredientList(List<Ingredient> ingredientList) {
         this.ingredientList = ingredientList;
         return this;
     }
 
-    public Recipe setCategories(List<Category> categories) {
+    Recipe setCategories(List<Category> categories) {
         this.categories = categories;
         return this;
     }
 
-    public Recipe setImage(Binary image) {
+    Recipe setImage(Binary image) {
         this.image = image;
         return this;
     }

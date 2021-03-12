@@ -1,7 +1,6 @@
 package com.goodrec.recipe.dto;
 
 import com.goodrec.recipe.domain.Difficulty;
-import org.bson.types.Binary;
 
 import java.util.List;
 import java.util.Objects;
@@ -17,7 +16,7 @@ public class RecipeDto {
     private Integer servings;
     private String directions;
     private Difficulty difficulty;
-    private Binary imageBase64;
+    private byte[] imageBase64;
     private List<IngredientDto> ingredientList;
     private List<CategoryDto> categories;
 
@@ -25,7 +24,7 @@ public class RecipeDto {
     }
 
     public RecipeDto(UUID uuid, UUID userUuid, String name, Integer cookingTime, Integer servings, String directions,
-                     Difficulty difficulty, Binary imageBase64, List<IngredientDto> ingredientList,
+                     Difficulty difficulty, byte[] imageBase64, List<IngredientDto> ingredientList,
                      List<CategoryDto> categories) {
         this.uuid = uuid;
         this.userUuid = userUuid;
@@ -51,14 +50,14 @@ public class RecipeDto {
                 newRecipe.getServings(),
                 newRecipe.getDirections(),
                 newRecipe.getDifficulty(),
-                new Binary(image),
+                image,
                 ingredients,
                 newRecipe.getCategories()
         );
     }
 
     public static RecipeDto createFrom(UUID recipeUUID, UUID userUUID, UpdateRecipeRequest updatedRecipe,
-                                       Binary imageBase64) {
+                                       byte[] imageBase64) {
 
         return new RecipeDto(recipeUUID,
                 userUUID,
@@ -104,7 +103,7 @@ public class RecipeDto {
         return difficulty;
     }
 
-    public Binary getImageBase64() {
+    public byte[] getImageBase64() {
         return imageBase64;
     }
 

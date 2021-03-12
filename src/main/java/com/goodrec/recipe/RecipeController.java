@@ -49,7 +49,7 @@ public class RecipeController {
                                             @RequestHeader(HEADER_STRING) String header) {
 
         String contentType = image.getContentType();
-        if (!isAcceptedImageFormat(contentType)) {
+        if (isNotAcceptedImageFormat(contentType)) {
             throw new ImageExtensionNotSupportedException(contentType);
         }
 
@@ -107,7 +107,7 @@ public class RecipeController {
                                                  @RequestHeader(HEADER_STRING) String header) {
 
         String contentType = image.getContentType();
-        if (!isAcceptedImageFormat(contentType)) {
+        if (isNotAcceptedImageFormat(contentType)) {
             throw new ImageExtensionNotSupportedException(contentType);
         }
 
@@ -117,7 +117,7 @@ public class RecipeController {
         return ResponseEntity.ok(updatedRecipe);
     }
 
-    private boolean isAcceptedImageFormat(String contentType) {
-        return IMAGE_JPEG_VALUE.equals(contentType) || IMAGE_PNG_VALUE.equals(contentType);
+    private boolean isNotAcceptedImageFormat(String contentType) {
+        return !IMAGE_JPEG_VALUE.equals(contentType) && !IMAGE_PNG_VALUE.equals(contentType);
     }
 }

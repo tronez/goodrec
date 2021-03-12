@@ -8,6 +8,8 @@ import com.goodrec.testdata.PrincipalCreator;
 import com.goodrec.testdata.RecipeCreator;
 import com.goodrec.testdata.RecipeTestDataFactory;
 import com.goodrec.user.domain.UserPrincipal;
+import com.jayway.jsonpath.JsonPath;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +32,11 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.http.MediaType.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -99,11 +105,14 @@ class TestRecipeApi {
                 .andExpect(header().string("location", containsString("/api/recipes/")))
                 .andReturn();
 
-        RecipeDto response = mapper.readValue(result.getResponse().getContentAsString(), RecipeDto.class);
+        String content = result.getResponse().getContentAsString();
+        String imageResponse = JsonPath.read(content, "$.imageBase64");
+        RecipeDto response = mapper.readValue(content, RecipeDto.class);
         assertAll(
                 () -> assertNotNull(response.getUuid(), "Recipe id can't be null"),
                 () -> assertEquals(recipeRequest.getName(), response.getName(), "Recipe name update isn't applied"),
-                () -> assertArrayEquals(imageMultipart.getBytes(), response.getImageBase64().getData())
+                () -> assertArrayEquals(imageMultipart.getBytes(), response.getImageBase64(), "Malformed image"),
+                () -> assertTrue(Base64.isBase64(imageResponse), "Returned image in response should be in base64")
         );
     }
 
@@ -256,7 +265,7 @@ class TestRecipeApi {
                 .andReturn();
 
         var actualRecipe = mapper.readValue(result.getResponse().getContentAsString(), RecipeDto.class);
-        assertArrayEquals(updatedImage.getBytes(), actualRecipe.getImageBase64().getData(),
+        assertArrayEquals(updatedImage.getBytes(), actualRecipe.getImageBase64(),
                 "images should be equal. Image update was not applied");
     }
 
