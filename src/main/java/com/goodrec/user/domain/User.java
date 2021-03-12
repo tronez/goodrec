@@ -14,7 +14,7 @@ class User {
     private String email;
     private String password;
 
-    public User() {
+    User() {
     }
 
     User(UUID id, String email, String password) {

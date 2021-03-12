@@ -32,8 +32,8 @@ class Recipe {
     Recipe() {
     }
 
-    public Recipe(UUID id, UUID userId, String name, Integer cookingTime, Integer servings, String directions,
-                  Difficulty difficulty, List<Ingredient> ingredientList, List<Category> categories, Binary image) {
+    Recipe(UUID id, UUID userId, String name, Integer cookingTime, Integer servings, String directions,
+           Difficulty difficulty, List<Ingredient> ingredientList, List<Category> categories, Binary image) {
         this.id = id;
         this.userId = userId;
         this.name = name;

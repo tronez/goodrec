@@ -13,10 +13,13 @@ class Category {
     @Id
     private String name;
 
-    public Category() {
+    @DBRef
+    private Set<Recipe> recipes;
+
+    Category() {
     }
 
-    public Category(String name) {
+    Category(String name) {
         this.name = name;
     }
 
@@ -28,14 +31,11 @@ class Category {
         return new CategoryDto(CategoryEnum.valueOf(name));
     }
 
-    @DBRef
-    private Set<Recipe> recipes;
-
     public String getName() {
         return name;
     }
 
-    public Set<Recipe> getRecipes() {
+    Set<Recipe> getRecipes() {
         return recipes;
     }
 

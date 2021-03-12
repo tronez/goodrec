@@ -17,6 +17,15 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 class ExceptionResponseAdvice {
 
+    @ExceptionHandler(RuntimeException.class)
+    ResponseEntity<ApiError<String>> handle(RuntimeException e) {
+        final var exceptionMessage = new ApiError<>("Something went wrong", List.of(e.getMessage()));
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exceptionMessage);
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     ResponseEntity<ApiError<String>> handleResourceNotFoundException(ResourceNotFoundException e) {
         final var exceptionMessage = new ApiError<>("Resource was not found", List.of(e.getMessage()));

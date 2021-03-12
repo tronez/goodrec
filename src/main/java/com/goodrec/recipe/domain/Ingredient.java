@@ -13,7 +13,7 @@ class Ingredient {
     private Double amount;
     private Unit unit;
 
-    public Ingredient(UUID id, String name, Double amount, Unit unit) {
+    Ingredient(UUID id, String name, Double amount, Unit unit) {
         this.id = id;
         this.name = name;
         this.amount = amount;
@@ -33,19 +33,19 @@ class Ingredient {
         return new IngredientDto(id, name, amount, unit);
     }
 
-    public UUID getId() {
+    UUID getId() {
         return id;
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public Double getAmount() {
+    Double getAmount() {
         return amount;
     }
 
-    public Unit getUnit() {
+    Unit getUnit() {
         return unit;
     }
 }

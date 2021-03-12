@@ -10,7 +10,7 @@ class FileManager {
     private FileManager() {
     }
 
-    public static byte[] getBytes(MultipartFile file) {
+    static byte[] getBytes(MultipartFile file) {
 
         if (file.isEmpty()) {
             return new byte[0];

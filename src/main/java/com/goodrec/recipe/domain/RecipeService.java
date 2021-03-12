@@ -29,24 +29,24 @@ class RecipeService {
                 .toDto();
     }
 
-    public RecipeDto getByUUID(UUID uuid) {
+    RecipeDto getByUUID(UUID uuid) {
         return recipeRepository
                 .findById(uuid)
                 .map(Recipe::toDto)
                 .orElseThrow(() -> new ResourceNotFoundException(Recipe.class, uuid));
     }
 
-    public void deleteByUUID(UUID recipeUUID) {
+    void deleteByUUID(UUID recipeUUID) {
         recipeRepository.deleteById(recipeUUID);
     }
 
-    public Page<RecipeDto> findAll(Pageable pageable) {
+    Page<RecipeDto> findAll(Pageable pageable) {
         return recipeRepository
                 .findAll(pageable)
                 .map(Recipe::toDto);
     }
 
-    public RecipeDto updateImage(RecipeDto recipeDto, byte[] imageBytes) {
+    RecipeDto updateImage(RecipeDto recipeDto, byte[] imageBytes) {
 
         final Binary image = new Binary(imageBytes);
         Recipe recipe = Recipe.createFrom(recipeDto);
