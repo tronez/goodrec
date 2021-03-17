@@ -13,6 +13,11 @@ public class CategoryDto {
         this.name = name;
     }
 
+    public static CategoryDto from(String categoryName) {
+        String uppercaseName = categoryName.toUpperCase();
+        return new CategoryDto(CategoryEnum.valueOf(uppercaseName));
+    }
+
     public String getName() {
         return name.toString();
     }

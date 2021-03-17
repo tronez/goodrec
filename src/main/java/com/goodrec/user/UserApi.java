@@ -19,11 +19,11 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
-public class UserController {
+public class UserApi {
 
     private final UserService userService;
 
-    UserController(UserService userService) {
+    UserApi(UserService userService) {
         this.userService = userService;
     }
 

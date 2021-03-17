@@ -36,4 +36,10 @@ class CategoryService {
                 .distinct()
                 .collect(Collectors.toList());
     }
+
+    public List<CategoryDto> getAllCategories() {
+        return repository.findAll().stream()
+                .map(Category::toDto)
+                .collect(Collectors.toList());
+    }
 }

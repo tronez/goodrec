@@ -81,4 +81,13 @@ public class RecipeFacade {
 
         throw new ResourceNotFoundException(Recipe.class, recipeUUID);
     }
+
+    public List<CategoryDto> getAllCategories() {
+        return categoryService.getAllCategories();
+    }
+
+    public Page<RecipeDto> findAllByCategory(String category, Pageable pageable) {
+        final CategoryDto dto = CategoryDto.from(category);
+        return recipeService.findAllByCategory(dto, pageable);
+    }
 }

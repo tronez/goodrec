@@ -2,6 +2,7 @@ package com.goodrec.recipe.domain;
 
 import com.goodrec.config.logging.Log;
 import com.goodrec.exception.ResourceNotFoundException;
+import com.goodrec.recipe.dto.CategoryDto;
 import com.goodrec.recipe.dto.RecipeDto;
 import org.bson.types.Binary;
 import org.springframework.data.domain.Page;
@@ -55,5 +56,13 @@ class RecipeService {
         return recipeRepository
                 .save(recipe)
                 .toDto();
+    }
+
+    public Page<RecipeDto> findAllByCategory(CategoryDto dto, Pageable pageable) {
+        Category category = Category.createFrom(dto);
+
+        return recipeRepository
+                .findAllByCategoriesContaining(category, pageable)
+                .map(Recipe::toDto);
     }
 }

@@ -33,20 +33,20 @@ import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 
 @RestController
 @RequestMapping("/api/recipes")
-public class RecipeController {
+public class RecipeApi {
 
     private final RecipeFacade facade;
     private final TokenProvider tokenProvider;
 
-    public RecipeController(RecipeFacade facade, TokenProvider tokenProvider) {
+    public RecipeApi(RecipeFacade facade, TokenProvider tokenProvider) {
         this.facade = facade;
         this.tokenProvider = tokenProvider;
     }
 
     @PostMapping(consumes = {"multipart/form-data"})
-    public ResponseEntity<RecipeDto> create(@RequestPart(value = "image") MultipartFile image,
-                                            @RequestPart(value = "request") @Valid NewRecipeRequest request,
-                                            @RequestHeader(HEADER_STRING) String header) {
+    public ResponseEntity<RecipeDto> postRecipe(@RequestPart(value = "image") MultipartFile image,
+                                                @RequestPart(value = "request") @Valid NewRecipeRequest request,
+                                                @RequestHeader(HEADER_STRING) String header) {
 
         String contentType = image.getContentType();
         if (isNotAcceptedImageFormat(contentType)) {
@@ -85,15 +85,15 @@ public class RecipeController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<RecipeDto>> findAll(Pageable pageable) {
+    public ResponseEntity<Page<RecipeDto>> getPage(Pageable pageable) {
         final Page<RecipeDto> page = facade.findAll(pageable);
         return ResponseEntity.ok(page);
     }
 
     @PatchMapping("/{uuid}")
-    public ResponseEntity<RecipeDto> update(@PathVariable UUID uuid,
-                                            @RequestBody @Valid UpdateRecipeRequest request,
-                                            @RequestHeader(HEADER_STRING) String header) {
+    public ResponseEntity<RecipeDto> patchRecipe(@PathVariable UUID uuid,
+                                                 @RequestBody @Valid UpdateRecipeRequest request,
+                                                 @RequestHeader(HEADER_STRING) String header) {
 
         final String token = tokenProvider.getJwtFromHeader(header);
         final RecipeDto updatedRecipe = facade.update(uuid, request, token);
@@ -102,9 +102,9 @@ public class RecipeController {
     }
 
     @PatchMapping(value = "/{uuid}/images", consumes = {"multipart/form-data"})
-    public ResponseEntity<RecipeDto> updateImage(@PathVariable UUID uuid,
-                                                 @RequestParam MultipartFile image,
-                                                 @RequestHeader(HEADER_STRING) String header) {
+    public ResponseEntity<RecipeDto> patchImage(@PathVariable UUID uuid,
+                                                @RequestParam MultipartFile image,
+                                                @RequestHeader(HEADER_STRING) String header) {
 
         String contentType = image.getContentType();
         if (isNotAcceptedImageFormat(contentType)) {

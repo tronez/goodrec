@@ -1,7 +1,7 @@
 package com.goodrec.user.domain;
 
 import com.goodrec.config.logging.Log;
-import com.goodrec.exception.BadRequestException;
+import com.goodrec.exception.RegistrationEmailInUseException;
 import com.goodrec.exception.ResourceNotFoundException;
 import com.goodrec.user.dto.RegisterRequest;
 import com.goodrec.user.dto.UserResponse;
@@ -25,7 +25,7 @@ public class UserService {
     public UserResponse create(RegisterRequest registerRequest) {
 
         if (repository.existsByEmail(registerRequest.getEmail())) {
-            throw new BadRequestException("Email address already in use.");
+            throw new RegistrationEmailInUseException(registerRequest.getEmail());
         }
 
         final String encryptedPassword = passwordEncoder.encode(registerRequest.getPassword());

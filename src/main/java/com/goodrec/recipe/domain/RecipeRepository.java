@@ -16,5 +16,7 @@ interface RecipeRepository extends org.springframework.data.repository.Repositor
 
     Page<Recipe> findAll(Pageable pageable);
 
+    Page<Recipe> findAllByCategoriesContaining(Category category, Pageable pageable);
+
     void deleteById(UUID uuid);
 }

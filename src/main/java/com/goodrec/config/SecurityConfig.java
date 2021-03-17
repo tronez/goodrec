@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -21,8 +20,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.time.Duration;
 import java.util.List;
-
-import static org.springframework.security.config.Customizer.*;
 
 @Configuration
 class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -61,6 +58,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
+                .mvcMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/api/recipes/**").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/api/users/**").permitAll()
                 .mvcMatchers(HttpMethod.POST, "/api/register").permitAll()
@@ -83,6 +81,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.setAllowedOrigins(List.of(allowAllString));
         configuration.setAllowedHeaders(List.of(allowAllString));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.addExposedHeader(allowAllString);
         configuration.setMaxAge(Duration.ofHours(1L));
 
         var source = new UrlBasedCorsConfigurationSource();

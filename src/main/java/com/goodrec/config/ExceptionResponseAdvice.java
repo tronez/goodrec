@@ -1,6 +1,7 @@
 package com.goodrec.config;
 
 import com.goodrec.exception.ImageExtensionNotSupportedException;
+import com.goodrec.exception.RegistrationEmailInUseException;
 import com.goodrec.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,15 @@ class ExceptionResponseAdvice {
     @ExceptionHandler(RuntimeException.class)
     ResponseEntity<ApiError<String>> handle(RuntimeException e) {
         final var exceptionMessage = new ApiError<>("Something went wrong", List.of(e.getMessage()));
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exceptionMessage);
+    }
+
+    @ExceptionHandler(RegistrationEmailInUseException.class)
+    ResponseEntity<ApiError<String>> handle(RegistrationEmailInUseException e) {
+        final var exceptionMessage = new ApiError<>("Could not register", List.of(e.getMessage()));
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
